@@ -2,6 +2,7 @@ module.exports = function (grunt) {
 	'use strict';
 
     // Add tasks
+    grunt.loadNpmTasks('grunt-browserify');
     grunt.loadNpmTasks('grunt-browser-sync');
     grunt.loadNpmTasks('grunt-contrib-jshint');
     grunt.loadNpmTasks('grunt-contrib-less');
@@ -10,12 +11,19 @@ module.exports = function (grunt) {
 
     // Project configuration
     grunt.initConfig({
+        browserify: {
+            js: {
+                src: './app/scripts/src/main.js',
+                dest: './app/scripts/dist/build.js'
+            }
+        },
+
         browserSync: {
             dev: {
                 bsFiles: {
                     src: [
                         'app/styles/css/*.css',
-                        'app/scripts/**/*.js',
+                        'app/scripts/src/**/*.js',
                         'app/*.html'
                     ]
                 },
@@ -48,7 +56,7 @@ module.exports = function (grunt) {
                 src: 'gruntfile.js'
             },
             scripts: {
-                src: ['app/scripts/**/*.js']
+                src: ['app/scripts/src/**/*.js']
             }
         },
 
@@ -62,8 +70,8 @@ module.exports = function (grunt) {
 
         watch: {
             scripts: {
-                files: ['app/scripts/**/*.js'],
-                tasks: ['jshint:scripts'],
+                files: ['app/scripts/src/**/*.js'],
+                tasks: ['jshint:scripts', 'browserify'],
                 options: {
                     spawn: false
                 }
@@ -77,5 +85,5 @@ module.exports = function (grunt) {
 
 
     // Command line tasks
-    grunt.registerTask('serve', ['jshint:scripts', 'less', 'browserSync','watch']);
+    grunt.registerTask('serve', ['jshint:scripts', 'browserify', 'less', 'browserSync','watch']);
 };

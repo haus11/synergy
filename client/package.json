@@ -32,6 +32,7 @@
     "grunt-contrib-jshint": "0.8.x",
     "grunt-contrib-watch": "0.5.x",
     "grunt-contrib-less": "^0.11.0",
-    "grunt-browser-sync": "^0.7.4"
+    "grunt-browser-sync": "^0.7.4",
+    "grunt-browserify": "~2.0.1"
   }
 }
