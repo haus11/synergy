@@ -13,8 +13,14 @@ module.exports = function (grunt) {
     grunt.initConfig({
         browserify: {
             js: {
-                src: './app/scripts/src/main.js',
-                dest: './app/scripts/dist/build.js'
+                files: {
+                  './app/scripts/dist/build.js': ['./app/scripts/src/main.js']  
+                },
+                options: {
+                    bundleOptions: {
+                        debug: true
+                    }
+                }
             }
         },
 
@@ -23,7 +29,7 @@ module.exports = function (grunt) {
                 bsFiles: {
                     src: [
                         'app/styles/css/*.css',
-                        'app/scripts/src/**/*.js',
+                        'app/scripts/dist/*.js',
                         'app/*.html'
                     ]
                 },
@@ -85,5 +91,10 @@ module.exports = function (grunt) {
 
 
     // Command line tasks
-    grunt.registerTask('serve', ['jshint:scripts', 'browserify', 'less', 'browserSync','watch']);
+    grunt.registerTask('serve', [
+        'jshint:scripts', 
+        'browserify',
+        'less', 
+        'browserSync',
+        'watch']);
 };

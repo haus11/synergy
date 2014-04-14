@@ -1,31 +1,14 @@
-/* globals Leap */
+// Require all needed modules here
+var LeapConnector = require('./leapConnector.js');
+var THREE         = require('../../bower_components/threejs/build/three.js');
 
-// Basic leap connection
-var leapController = new Leap.Controller({enableGestures: true});
 
+// Create a basic leap connection
+var leapConnection = new LeapConnector();
 
-leapController.on('connect', function() {
-  console.log("Successfully connected.");
+leapConnection.on('swipeStart', function() {
+	console.log('Swipe detected');
 });
 
 
-leapController.on('gesture', function (gesture){
-    if(gesture.type === 'swipe'){
-        switch(gesture.state) {
-			case 'start':
-				console.log('Swipe start');
-				break;
-
-			case 'update':
-				//console.log('Swipe update');
-				break;
-				
-			case 'stop': 
-				console.log('Swpie end');
-				break;
-		}
-	}
-});
-
-
-leapController.connect();
+console.log(THREE);
