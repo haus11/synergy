@@ -1,0 +1,40 @@
+{
+  "name": "synergy-client",
+  "version": "0.0.1",
+  "description": "The client for the leap.js controlled earth",
+  "homepage": "https://github.com/thoomi/dm3",
+  "license": "MIT",
+  "contributors": [
+    {
+      "name": "David Koenig",
+      "email": "david.koenig@fh-erfurt.de",
+      "web": "https://github.com/DavidKoenig)"
+    },
+    {
+      "name": "David Rochholz",
+      "email": "david.rochholz@fh-erfurt.de",
+      "web": "https://github.com/VanGoghsCoffee)"
+    },
+    {
+      "name": "Philipp Möhler",
+      "email": "philipp.moehler@fh-erfurt.de",
+      "web": "https://github.com/moehlone)"
+    },
+    {
+      "name": "Thomas Blank",
+      "email": "thomas.blank@fh-erfurt.de",
+      "web": "https://github.com/thoomi)"
+    }
+  ],
+  "dependencies": {
+    "leapjs": "~0.4.3"
+  },
+  "devDependencies": {
+    "grunt": "0.4.x",
+    "grunt-contrib-jshint": "0.8.x",
+    "grunt-contrib-watch": "0.5.x",
+    "grunt-contrib-less": "^0.11.0",
+    "grunt-browser-sync": "^0.7.4",
+    "grunt-browserify": "~2.0.7"
+  }
+}
