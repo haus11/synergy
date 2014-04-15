@@ -1,14 +1,26 @@
+/* globals requestAnimationFrame*/
+
 // Require all needed modules here
 var LeapConnector = require('./leapConnector.js');
-var THREE         = require('../../bower_components/threejs/build/three.js');
+var Renderer      = require('./renderer.js');
 
 
 // Create a basic leap connection
 var leapConnection = new LeapConnector();
 
-leapConnection.on('swipeStart', function() {
-	console.log('Swipe detected');
-});
+//	leapConnection.on('swipeStart', function() {
+//		console.log('Swipe detected');
+//	});
+
+// Create a renderer
+var renderer = new Renderer();
 
 
-console.log(THREE);
+(function update() {
+
+	requestAnimationFrame(update);
+
+	leapConnection.update();
+	renderer.update();
+
+}());

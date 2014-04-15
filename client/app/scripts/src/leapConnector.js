@@ -64,3 +64,8 @@ LeapConnector.prototype.setupGestureRecognizer = function() {
 		}
 	});
 };
+
+
+LeapConnector.prototype.update = function() {
+	// body...
+};
