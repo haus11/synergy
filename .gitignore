@@ -2,3 +2,4 @@ node_modules/
 client/node_modules/
 client/app/bower_components/
 sublime/
+client/app/scripts/dist/

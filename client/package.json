@@ -27,7 +27,6 @@
     }
   ],
   "dependencies": {
-    "leapjs": "~0.4.3"
   },
   "devDependencies": {
     "grunt": "0.4.x",
