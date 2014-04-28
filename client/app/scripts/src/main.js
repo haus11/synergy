@@ -2,7 +2,8 @@
 
 // Require all needed modules here
 var LeapConnector = require('./leapConnector.js');
-var Renderer      = require('./renderer.js');
+//var Renderer      = require('./renderer.js');
+var CesiumWorld      = require('./cesium_world.js');
 
 
 // Create a basic leap connection
@@ -13,7 +14,9 @@ var leapConnection = new LeapConnector();
 //	});
 
 // Create a renderer
-var renderer = new Renderer();
+//var renderer = new Renderer();
+
+var cesiumWorld = new CesiumWorld();
 
 
 (function update() {
@@ -21,6 +24,7 @@ var renderer = new Renderer();
 	requestAnimationFrame(update);
 
 	leapConnection.update();
-	renderer.update();
+	//renderer.update();
+        cesiumWorld.update();
 
 }());

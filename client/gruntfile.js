@@ -56,13 +56,14 @@ module.exports = function (grunt) {
                 unused: true,
                 boss: true,
                 eqnull: true,
-                proto: true
+                proto: true,
+				ignores: ['app/scripts/src/Cesium.js']
             },
             gruntfile: {
                 src: 'gruntfile.js'
             },
             scripts: {
-                src: ['app/scripts/src/**/*.js']
+                src: ['app/scripts/src/**/*.js', '!app/scripts/src/cesium/**/*.js']
             }
         },
 
