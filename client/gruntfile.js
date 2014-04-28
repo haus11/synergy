@@ -56,8 +56,7 @@ module.exports = function (grunt) {
                 unused: true,
                 boss: true,
                 eqnull: true,
-                proto: true,
-				ignores: ['app/scripts/src/Cesium.js']
+                proto: true
             },
             gruntfile: {
                 src: 'gruntfile.js'

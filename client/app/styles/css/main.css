@@ -8,22 +8,20 @@
   -webkit-box-sizing: border-box;
   box-sizing: border-box;
 }
-body {
-  overflow: hidden;
-  padding: 0;
-  margin: 0;
-}
-.webgl-container {
-  overflow: hidden;
-}
 #cesiumContainer {
   position: absolute;
   top: 0;
   left: 0;
-  height: 1080px;
+  min-height: 100%;
   width: 100%;
   margin: 0;
   overflow: hidden;
   padding: 0;
   font-family: sans-serif;
+}
+body {
+  padding: 0;
+  margin: 0;
+  overflow: hidden;
+  height: 100%;
 }
