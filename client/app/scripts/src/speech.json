@@ -1,0 +1,106 @@
+[
+  {
+    "language": "German",
+    "code": "de-DE",
+    "items": [
+      {
+        "emit": "selectLayer",
+        "detect": "Oberfläche",
+        "answers": {
+          "success": [
+            "Ich habe die Oberfläche zu #REPLACE# geändert."
+          ],
+          "fail": [
+            "Ich kann die Oberfläche #REPLACE# nicht benutzen."
+          ]
+        }
+      },  
+      {
+        "emit": "navigateTo",
+        "detect": "suche",
+        "answers": {
+          "success": [
+            "Ich habe #REPLACE# gefunden"
+          ],
+          "fail": [
+            "Ich konnte #REPLACE# nicht finden.",
+            "Ich habe #REPLACE# nicht gefunden.",
+            "Es tut mir leid, ich habe #REPLACE# nicht gefunden."
+          ]
+        }
+      },
+      {
+        "emit": "moveForward",
+        "detect": "vergrößern",
+        "answers": {
+          "success": [
+            "Du bist jetzt näher dran."
+          ],
+          "fail": [
+            "Ich konnte nicht weiter vergrößern."
+          ]
+        }
+      },
+      {
+        "emit": "moveBackward",
+        "detect": "verkleinern",
+        "answers": {
+          "success": [
+            "Du bist jetzt weiter weg."
+          ],
+          "fail": [
+            "Ich konnte nicht weiter verkleinern."
+          ]
+        }
+      },
+      {
+        "emit": "moveUp",
+        "detect": "hoch",
+        "answers": {
+          "success": [
+            "Du bist jetzt weiter oben."
+          ],
+          "fail": [
+            "Ich konnte nicht weiter hoch."
+          ]
+        }
+      },
+      {
+        "emit": "moveDown",
+        "detect": "runter",
+        "answers": {
+          "success": [
+            "Du bist jetzt weiter unten."
+          ],
+          "fail": [
+            "Ich konnte nicht weiter runter."
+          ]
+        }
+      },
+      {
+        "emit": "moveLeft",
+        "detect": "links",
+        "answers": {
+          "success": [
+            "Du bist jetzt weiter links."
+          ],
+          "fail": [
+            "Ich konnte nicht weiter links."
+          ]
+        }
+      },
+      {
+        "emit": "moveRight",
+        "detect": "rechts",
+        "answers": {
+          "success": [
+            "Du bist jetzt weiter rechts."
+          ],
+          "fail": [
+            "Ich konnte nicht weiter rechts."
+          ]
+        }
+      }
+    ]
+  }
+]
