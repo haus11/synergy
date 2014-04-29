@@ -4,6 +4,7 @@
 var LeapConnector = require('./leapConnector.js');
 //var Renderer      = require('./renderer.js');
 var CesiumWorld      = require('./cesium_world.js');
+var SpeechRecognition = require('./speechRecognition.js');
 
 
 // Create a basic leap connection
@@ -16,8 +17,9 @@ var leapConnection = new LeapConnector();
 // Create a renderer
 //var renderer = new Renderer();
 
-var cesiumWorld = new CesiumWorld();
+var speechRecognition = new SpeechRecognition();
 
+var cesiumWorld = new CesiumWorld(speechRecognition);
 
 (function update() {
 
