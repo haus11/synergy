@@ -1,3 +1,8 @@
+/*
+ * Adding Fonts
+*/
+@import "../font/clear-sans-fontfacekit/web_fonts/clearsans_medium_macroman/stylesheet.css";
+
 /**
  * Apply a natural box layout model to all elements
 **/
@@ -48,4 +53,40 @@ body {
     width: 100%;
     min-height: 1080px;
     pointer-events:none;
+}
+
+/*
+ * Presentation layer
+*/
+.p-welcomebox {
+    width: 450px;
+    height: 190px;
+    padding: 10px;
+}
+.p-title {
+    text-align: center;
+}
+#welcome-blur {
+    background-color: rgba(240,240,240,0.8);
+    position: absolute;
+    overflow: hidden;
+}
+/*
+ * Layout layer
+*/
+.l-welcomebox {
+    position: relative;
+    top: 50px;
+}
+
+.l-title {
+    margin-bottom: 10px;
+}
+
+.l-paragraph {
+    margin-bottom: 15px;
+}
+
+.l-welcome-btn {
+    text-align: center;
 }
