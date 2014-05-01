@@ -25,8 +25,9 @@ var cesiumWorld = new CesiumWorld(speechRecognition, speechSynthesis);
 
 console.log(speechSynthesis);
 
-(function update() { 
+(function update() {
 
+///test
 	requestAnimationFrame(update);
 
 	leapConnection.update();
@@ -34,3 +35,5 @@ console.log(speechSynthesis);
         cesiumWorld.update();
 
 }());
+
+//new
