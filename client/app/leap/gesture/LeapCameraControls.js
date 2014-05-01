@@ -8,13 +8,14 @@
 THREE.LeapCameraControls = function(camera) {
   var _this = this;
 
-  this.camera = camera;
+  _this.camera = camera;
 
   // api
   this.enabled      = true;
   this.target       = new THREE.Vector3(0, 0, 0);
   this.step         = (camera.position.z == 0 ? Math.pow(10, (Math.log(camera.frustum.near) + Math.log(camera.frustum.far))/Math.log(10))/10.0 : camera.position.z);
   this.fingerFactor = 2;
+  this.startZ       = _this.camera.position.z;
 
   // `...Hands`       : integer or range given as an array of length 2
   // `...Fingers`     : integer or range given as an array of length 2
@@ -214,23 +215,33 @@ THREE.LeapCameraControls = function(camera) {
       if (!_rotateYLast) _rotateYLast = y;
       var yDelta = y - _rotateYLast;
 
+
       var t = new THREE.Vector3().subVectors(_this.camera.position, _this.target); // translate
       angleDelta = _this.rotateTransform(yDelta);
       newAngle = t.angleTo(new THREE.Vector3(0, 1, 0)) + angleDelta;
       if (_this.rotateMin < newAngle && newAngle < _this.rotateMax) {
         var n = new THREE.Vector3(t.z, 0, -t.x).normalize();
         var matrixX = new THREE.Matrix4().makeRotationAxis(n, angleDelta);
-        _this.camera.position = t.applyMatrix4(matrixX).add(_this.target); // rotate and translate back        
+        //_this.camera.position = t.applyMatrix4(matrixX).add(_this.target); // rotate and translate back
+        _this.camera.rotate(n, -angleDelta);   
       };
 
       // rotate around y-axis translated by target vector
       var x = _this.position(frame, 'rotate')[0];
       if (!_rotateXLast) _rotateXLast = x;
       var xDelta = x - _rotateXLast;
+
+      angleDelta = _this.rotateTransform(xDelta);
+      var n = new THREE.Vector3(0, 1, 0).normalize();
+
+      _this.camera.rotate(n, angleDelta);
+
+      /*
       var matrixY = new THREE.Matrix4().makeRotationY(-_this.rotateTransform(xDelta));
       _this.camera.position.sub(_this.target).applyMatrix4(matrixY).add(_this.target); // translate, rotate and translate back
       _this.camera.lookAt(_this.camera.position, _this.target, _this.camera.up);
-      
+      */
+
       _rotateYLast = y;
       _rotateXLast = x;
       _zoomZLast   = null;
@@ -244,17 +255,45 @@ THREE.LeapCameraControls = function(camera) {
   };
 
   this.zoomCamera = function(frame) {
+
     if (_this.zoomEnabled && _this.applyGesture(frame, 'zoom')) {
       var z = _this.position(frame, 'zoom')[2];
       if (!_zoomZLast) _zoomZLast = z;
       var zDelta = z - _zoomZLast;
+
+      var speedFactor = 5 / _this.startZ;
+      if (_this.camera.position.z > _this.startZ) {
+         _this.zoomSpeed = 5;
+      }
+      else if (_this.camera.position.z < (_this.startZ / 2)) {
+         _this.zoomSpeed = Math.sqrt((speedFactor * _this.camera.position.z / 2));
+      }
+      
+      else {
+         _this.zoomSpeed = speedFactor * _this.camera.position.z;
+      }
+
+
+      var lengthDelta = _this.zoomTransform(zDelta);
+      var absoluteLength = Math.abs(lengthDelta);
+
+
+      if(lengthDelta > 0) {
+        _this.camera.zoomIn(absoluteLength);
+      }
+      else {
+        _this.camera.zoomOut(absoluteLength);
+      }
+      
+      /*
       var t = new THREE.Vector3().subVectors(_this.camera.position, _this.target);
-      lengthDelta = _this.zoomTransform(zDelta);
+      var lengthDelta = _this.zoomTransform(zDelta);
       newLength = t.length() - lengthDelta;
       if (_this.zoomMin < newLength && newLength < _this.zoomMax) {
         t.normalize().multiplyScalar(lengthDelta);
         _this.camera.position.sub(t);        
       };
+      */
 
       _zoomZLast   = z; 
       _rotateXLast = null;
@@ -279,7 +318,7 @@ THREE.LeapCameraControls = function(camera) {
       var yDelta = y - _panYLast;
       var zDelta = z - _panZLast;
 
-      var v = _this.camera.localToWorld(new THREE.Vector3(_this.panTransform(xDelta), _this.panTransform(yDelta), _this.panTransform(zDelta)));
+      //var v = _this.camera.localToWorld(new THREE.Vector3(_this.panTransform(xDelta), _this.panTransform(yDelta), _this.panTransform(zDelta)));
       v.sub(_this.camera.position);
 
       _this.camera.position.sub(v);

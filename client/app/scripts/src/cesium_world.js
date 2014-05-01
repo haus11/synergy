@@ -58,7 +58,8 @@ function CesiumWorld(_speechRecognition, _speechSynthesis) {
         this.ellipsoid = this.widget.centralBody.ellipsoid;
         this.speechRecognition = _speechRecognition;
         this.speechSynthesis = _speechSynthesis;
-        
+
+
         this.speechRecognition.on('navigateTo', function(event)
         {
             //console.log(event.action);
@@ -164,8 +165,8 @@ CesiumWorld.prototype.move = function(_direction) {
 
 
 CesiumWorld.prototype.init = function() {
-   console.log(this.geoCoder.viewModel.search);
-   console.log(this.geoCoder);
+   //console.log(this.geoCoder.viewModel.search);
+   //console.log(this.geoCoder);
 };
 
 CesiumWorld.prototype.flyTo = function(_location) {
