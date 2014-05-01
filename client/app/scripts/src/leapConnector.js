@@ -90,7 +90,7 @@ function moveSphere(Sphere, posX, posY, posZ, rotX) {
 
 
 LeapConnector.prototype.visualize = function () {
-	var fingerIds   = {};
+    var fingerIds   = {};
     var handIds     = {};
     var handsLength = 0;
     var sphereDiv   = null;

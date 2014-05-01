@@ -231,8 +231,6 @@ THREE.LeapCameraControls = function(camera) {
       _this.camera.position.sub(_this.target).applyMatrix4(matrixY).add(_this.target); // translate, rotate and translate back
       _this.camera.lookAt(_this.camera.position, _this.target, _this.camera.up);
       
-
-
       _rotateYLast = y;
       _rotateXLast = x;
       _zoomZLast   = null;
