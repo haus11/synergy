@@ -7,28 +7,34 @@
     Author     : kinske
 */
 
-*,*:before,*:after { 
-        margin: 0; 
-        padding: 0; 
+*,*:before {
+        margin: 0;
+        padding: 0;
         border: 0;
         -webkit-box-sizing: border-box;
         -moz-box-sizing: border-box;
         box-sizing: border-box;
       }
+
       button {
+        position: relative;
+        z-index: 999;
         padding: .5em;
       }
-      #app { 
+
+      #app {
         position: absolute;
         width: 100%;
         height: 100%;
         font-size: 200%;
         overflow: hidden;
         //background-color: #101010;
-        -webkit-perspective: 1000px; 
-        -moz-perspective: 1000px; 
-        perspective: 1000px; 
+        -webkit-backface-visibility: hidden;
+        backface-visibility: hidden;
+        -webkit-perspective: 1000;
+        perspective: 1000;
       }
+
       #scene,
       #scene:before {
         position: absolute;
@@ -37,34 +43,48 @@
         width: 40em;
         height: 40em;
         margin: -20em 0 0 -20em;
-  
-        transform-style: preserve-3d;
-        -moz-transform-style: preserve-3d;
+        /*
+        border: 4px solid #A0A0A0;
+        background-color: rgba(255,255,255,.1);
+        background-image:
+          -webkit-linear-gradient(rgba(255,255,255,.4) .1em, transparent .1em),
+          -webkit-linear-gradient(0deg, rgba(255,255,255,.4) .1em, transparent .1em),
+          -webkit-linear-gradient(rgba(255,255,255,.3) .05em, transparent .05em),
+          -webkit-linear-gradient(0deg, rgba(255,255,255,.3) .05em, transparent .05em);
+        background-image:
+          linear-gradient(rgba(255,255,255,.4) .1em, transparent .1em),
+          linear-gradient(90deg, rgba(255,255,255,.4) .1em, transparent .1em),
+          linear-gradient(rgba(255,255,255,.3) .05em, transparent .05em),
+          linear-gradient(90deg, rgba(255,255,255,.3) .05em, transparent .05em);
+
+        background-size: 5em 5em, 5em 5em, 1em 1em, 1em 1em;
+        background-position: -.1em -.1em, -.1em -.1em, -.05em -.05em, -.05em -.05em;
+        */
         -webkit-transform-style: preserve-3d;
-        transform: rotateX(75deg);
-        -moz-transform: rotateX(75deg);
-        -webkit-transform: rotateX(75deg);
+        transform-style: preserve-3d;
       }
+
       #scene {
-        transform: rotateX(75deg);
-        -moz-transform: rotateX(75deg);
-        -webkit-transform: rotateX(75deg);
+        -webkit-transform: rotate3d(1, 0, 0, 75deg);
+        transform: perspective(650px) rotate3d(1, 0, 0, 75deg)
       }
+
       #scene:before {
         content: '';
-        transform: rotateX(90deg) translateZ(19.5em) translateY(20em);
-        -moz-transform: rotateX(90deg) translateZ(19.5em) translateY(20em);
-        -webkit-transform: rotateX(90deg) translateZ(19.5em) translateY(20em);
+        -webkit-transform-origin: 50% 0;
+        transform-origin: 50% 0;
+        -webkit-transform: rotate3d(1, 0, 0, 90deg);
+        transform: rotateX(90deg);
       }
-      .cube {
-        background-color: red;
-        transform-style: preserve-3d;
-        -moz-transform-style: preserve-3d;
-        -webkit-transform-style: preserve-3d;
-        transform: translateX(19.5em) translateY(19.5em) translateZ(0em);
-        -moz-transform: translateX(19.5em) translateY(19.5em) translateZ(0em);
-        -webkit-transform: translateX(19.5em) translateY(19.5em) translateZ(0em);
-      }
+
+      //.cube {
+        //background-color: red;
+        //-webkit-transform-style: preserve-3d;
+        //transform-style: preserve-3d;
+        //-webkit-transform: translate3d(19.5em, 19.5em, 0em);
+        //transform: translate3d(19.5em, 19.5em, 0em);
+      //}
+
       .finger,
       .sphere {
         position: absolute;
@@ -74,21 +94,19 @@
         height: 1em;
         margin: -.5em 0 0 -.5em;
         -webkit-transform-style: preserve-3d;
-        -moz-transform-style: preserve-3d;
         transform-style: preserve-3d;
-        -webkit-transform: translateX(14.5em) translateY(14.5em) translateZ(0);
-        -moz-transform: translateX(14.5em) translateY(14.5em) translateZ(0);
-        transform: translateX(14.5em) translateY(14.5em) translateZ(0);
+        -webkit-transform: translate3d(14.5em, 14.5em, 0);
+        transform: translate3d(14.5em, 14.5em, 0);
       }
 
       .finger {
         opacity: .3;
-        height: 1em;
+        height: 3em;
       }
 
       .sphere {
         opacity: .3;
-        display: none;
+        //display: none;
         font-size: 85px;
       }
 
@@ -102,70 +120,59 @@
         height: 1em;
         background-color: inherit;
         -webkit-transform-style: preserve-3d;
-        -moz-transform-style: preserve-3d;
         transform-style: preserve-3d;
         -webkit-transform-origin: 0 0;
-        -moz-transform-origin: 0 0;
         transform-origin: 0 0;
         -webkit-box-shadow: inset 0 0 0 1px rgba(255,255,255,.9);
-        -moz-box-shadow: inset 0 0 0 1px rgba(255,255,255,.9);
         box-shadow: inset 0 0 0 1px rgba(255,255,255,.9);
       }
+
       .cube .face.tp {
-        -webkit-transform: translateZ(1em);
-        -moz-transform: translateZ(1em);
-        transform: translateZ(1em);
+        -webkit-transform: translate3d(0, 0, 1em);
       }
       .cube .face.ft {
-        -webkit-transform: rotateX(90deg) translateZ(-1em);
-        -moz-transform: rotateX(90deg) translateZ(-1em);
-        transform: rotateX(90deg) translateZ(-1em);
+        -webkit-transform: rotate3d(1, 0, 0, 90deg) translate3d(0, 0, -1em);
+        transform: rotate3d(1, 0, 0, 90deg) translate3d(0, 0, -1em);
       }
       .cube .face.bk {
-        -webkit-transform: rotateX(90deg);
-        -moz-transform: rotateX(90deg);
-        transform: rotateX(90deg);
+        -webkit-transform: rotate3d(1, 0, 0, 90deg);
+        transform: rotate3d(1, 0, 0, 90deg);
       }
       .cube .face.lt {
-        -webkit-transform: rotateY(90deg) translateX(-1em);
-        -moz-transform: rotateY(90deg) translateX(-1em);
-        transform: rotateY(90deg) translateX(-1em);
+        -webkit-transform: rotate3d(0, 1, 0, 90deg) translate3d(-1em, 0, 0);
+        transform: rotate3d(0, 1, 0, 90deg) translate3d(-1em, 0, 0);
       }
       .cube .face.rt {
-        -webkit-transform: rotateY(90deg) translateX(-1em) translateZ(1em);
-        -moz-transform: rotateY(90deg) translateX(-1em) translateZ(1em);
-        transform: rotateY(90deg) translateX(-1em) translateZ(1em);
+        -webkit-transform: rotate3d(0, 1, 0, 90deg) translate3d(-1em, 0, 1em);
+        transform: rotate3d(0, 1, 0, 90deg) translate3d(-1em, 0, 1em);
       }
-
       .finger .face.tp {
-        -webkit-transform: translateZ(1em);
-        -moz-transform: translateZ(1em);
-        transform: translateZ(1em);
+        -webkit-transform: translate3d(0, 0, 1em);
+        transform: translate3d(0, 0, 1em);
         height: 3em;
       }
       .finger .face.ft {
-        -webkit-transform: rotateX(90deg) translateZ(-3em);
-        -moz-transform: rotateX(90deg) translateZ(-3em);
-        transform: rotateX(90deg) translateZ(-3em);
+        -webkit-transform: rotate3d(1, 0, 0, 90deg) translate3d(0, 0, -3em);
+        transform: rotate3d(1, 0, 0, 90deg) translate3d(0, 0, -3em);
       }
       .finger .face.bk {
-        -webkit-transform: rotateX(90deg);
-        -moz-transform: rotateX(90deg);
-        transform: rotateX(90deg);
+        -webkit-transform: rotate3d(1, 0, 0, 90deg);
+        transform: rotate3d(1, 0, 0, 90deg);
       }
       .finger .face.lt {
-        -webkit-transform: rotateY(90deg) translateX(-1em);
-        -moz-transform: rotateY(90deg) translateX(-1em);
-        transform: rotateY(90deg) translateX(-1em);
+        -webkit-transform: rotate3d(0, 1, 0, 90deg) translate3d(-1em, 0, 0);
+        transform: rotate3d(0, 1, 0, 90deg) translate3d(-1em, 0, 0);
         height: 3em;
       }
       .finger .face.rt {
-        -webkit-transform: rotateY(90deg) translateX(-1em) translateZ(1em);
-        -moz-transform: rotateY(90deg) translateX(-1em) translateZ(1em);
-        transform: rotateY(90deg) translateX(-1em) translateZ(1em);
+        -webkit-transform: rotate3d(0, 1, 0, 90deg) translate3d(-1em, 0, 1em);
+        transform: rotate3d(0, 1, 0, 90deg) translate3d(-1em, 0, 1em);
         height: 3em;
       }
       
       #showHands, #hideHands{
-		  display: none;
-	  }
+        display: none;
+      }
+      .face.bk , .face.lt{
+          border-style: none;
+      }
