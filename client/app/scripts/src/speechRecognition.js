@@ -13,15 +13,12 @@ module.exports = SpeechRecognition;
 /**
  * Constructor
  */
-function SpeechRecognition() {
+function SpeechRecognition(_speechList) {
 
     this.browserRecognition = null;
     this.isRecognizing = false;
     this.language = 'de-DE';
-    this.recognitionList = 
-    [['de-DE', [{'emit': 'navigateTo', 'phrase': 'suche'}, {'emit': 'selectLayer', 'phrase': 'wähle Oberfläche'}]],
-     ['en-US', [{'emit': 'navigateTo', 'phrase': 'go to'}, {'emit': 'selectLayer', 'phrase': 'select surface'}]]
-    ];
+    this.speechList = _speechList;
 
     this.init();
 }
@@ -70,7 +67,7 @@ SpeechRecognition.prototype.onResult = function(event) {
     var finalMatch = false;
 
     for (var i = event.resultIndex; i < event.results.length; ++i) {
-        console.log(event.results[i][0].transcript);
+        console.log(event.results[i]);
         if (event.results[i].isFinal) {
             finalMatch = true;
             interimTranscript += event.results[i][0].transcript;
@@ -80,22 +77,22 @@ SpeechRecognition.prototype.onResult = function(event) {
     if(finalMatch)
     {
         interimTranscript = this.trimSpaces(interimTranscript);
-        console.log(interimTranscript);
-        for(var j = 0; j < this.recognitionList.length; ++j)
+        
+        for(var j = 0; j < this.speechList.length; ++j)
         {
-            if(this.recognitionList[j][0] === this.browserRecognition.lang)
+            if(this.speechList[j].code === this.language)
             {
-                for(var k = 0; k < this.recognitionList[j][1].length; ++k)
+                for(var k = 0; k < this.speechList[j].items.length; ++k)
                 {
-                    var currentDetectionItem = this.recognitionList[j][1][k];
-                    
-                    if(interimTranscript.toLowerCase().indexOf(currentDetectionItem.phrase.toLowerCase()) !== -1)
+                    var currentDetectionItem = this.speechList[j].items[k];
+
+                    if(interimTranscript.toLowerCase().indexOf(currentDetectionItem.detect.toLowerCase()) !== -1)
                     {
                         var eventData = {
-                            'action' : this.trimSpaces(interimTranscript.replace(currentDetectionItem.phrase, '')),
-                            'detected' : currentDetectionItem.phrase,
+                            'action' : this.trimSpaces(interimTranscript.replace(currentDetectionItem.detect, '')),
+                            'detected' : currentDetectionItem.detect,
                             'emit' : currentDetectionItem.emit,
-                            'language' : this.browserRecognition.lang
+                            'language' : this.language
                         };
 
                         this.emit(currentDetectionItem.emit, eventData);
