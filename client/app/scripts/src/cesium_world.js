@@ -1,4 +1,4 @@
-/* globals Cesium, CesiumWorld, window*/
+/* globals Cesium, CesiumWorld, window */
 
 /**
 * Export for require statemant
@@ -61,13 +61,13 @@ function CesiumWorld(_speechRecognition, _speechSynthesis) {
         
         this.speechRecognition.on('navigateTo', function(event)
         {
-            console.log(event.action);
+            //console.log(event.action);
             _this.flyTo(event.action);
         });
         
         this.speechRecognition.on('selectLayer', function(event)
         {
-            console.log(event.action);
+            //console.log(event.action);
             _this.changeLayer(event.action);
         });
         
@@ -165,7 +165,6 @@ CesiumWorld.prototype.move = function(_direction) {
 
 CesiumWorld.prototype.init = function() {
    console.log(this.geoCoder.viewModel.search);
-   console.log(this.widget.length);
    console.log(this.geoCoder);
 };
 

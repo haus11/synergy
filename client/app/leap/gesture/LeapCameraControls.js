@@ -13,7 +13,7 @@ THREE.LeapCameraControls = function(camera) {
   // api
   this.enabled      = true;
   this.target       = new THREE.Vector3(0, 0, 0);
-  this.step         = (camera.position.z == 0 ? Math.pow(10, (Math.log(camera.near) + Math.log(camera.far))/Math.log(10))/10.0 : camera.position.z);
+  this.step         = (camera.position.z == 0 ? Math.pow(10, (Math.log(camera.frustum.near) + Math.log(camera.frustum.far))/Math.log(10))/10.0 : camera.position.z);
   this.fingerFactor = 2;
 
   // `...Hands`       : integer or range given as an array of length 2
@@ -35,14 +35,14 @@ THREE.LeapCameraControls = function(camera) {
   
   // zoom
   this.zoomEnabled         = true;
-  this.zoomSpeed           = 1.0;
+  this.zoomSpeed           = 5.0;
   this.zoomHands           = 1;
   this.zoomFingers         = [4, 5];
   this.zoomRightHanded     = true;
   this.zoomHandPosition    = true;
   this.zoomStabilized      = false;
-  this.zoomMin             = _this.camera.near;
-  this.zoomMax             = _this.camera.far;
+  this.zoomMin             = _this.camera.frustum.near;
+  this.zoomMax             = _this.camera.frustum.far;
   
   // pan
   this.panEnabled          = true;
@@ -213,6 +213,7 @@ THREE.LeapCameraControls = function(camera) {
       var y = _this.position(frame, 'rotate')[1];
       if (!_rotateYLast) _rotateYLast = y;
       var yDelta = y - _rotateYLast;
+
       var t = new THREE.Vector3().subVectors(_this.camera.position, _this.target); // translate
       angleDelta = _this.rotateTransform(yDelta);
       newAngle = t.angleTo(new THREE.Vector3(0, 1, 0)) + angleDelta;
@@ -228,8 +229,10 @@ THREE.LeapCameraControls = function(camera) {
       var xDelta = x - _rotateXLast;
       var matrixY = new THREE.Matrix4().makeRotationY(-_this.rotateTransform(xDelta));
       _this.camera.position.sub(_this.target).applyMatrix4(matrixY).add(_this.target); // translate, rotate and translate back
-      _this.camera.lookAt(_this.target);
+      _this.camera.lookAt(_this.camera.position, _this.target, _this.camera.up);
       
+
+
       _rotateYLast = y;
       _rotateXLast = x;
       _zoomZLast   = null;
@@ -238,7 +241,7 @@ THREE.LeapCameraControls = function(camera) {
       _panZLast    = null;      
     } else {
       _rotateYLast = null;
-      _rotateXLast = null;      
+      _rotateXLast = null;
     };
   };
 
@@ -298,6 +301,7 @@ THREE.LeapCameraControls = function(camera) {
   };
 
   this.update = function(frame) {
+
     if (_this.enabled) {
       _this.rotateCamera(frame);
       _this.zoomCamera(frame);
