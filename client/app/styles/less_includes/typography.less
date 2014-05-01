@@ -1,0 +1,64 @@
+/* globals @White, @Black */
+
+/*
+ * Font names
+ Bold: 					clear_sansbold
+ BoldItalic:		clear_sansbold_italic
+ Italic: 				clear_sansitalic
+ Light:					clear_sans_lightregular
+ Medium:				clear_sans_mediumregular
+ MediumItalic:	clear_sans_mediumitalic
+ Regular:				clear_sansregular
+ Thin:					clear_sans_thinregular
+*/
+
+@t_Sans: "Helvetica Neue", Verdana, Arial;
+
+/*
+ * Basic setting
+*/
+html {
+	font-size: 100%;
+	line-height: 1.5rem;
+}
+
+/*
+ * Typographic mixins
+*/
+.m_Typography(@_Color: FFFFFF, @_Font: Arial, @_Size: 1rem) {
+	color: @_Color;
+	font-family: @_Font, @t_Sans;
+	font-size: @_Size;
+}
+
+/*
+ * Typographic settings
+*/
+.t_H1 {
+	.m_Typography(@c_White, "clear_sansbold", 2.25rem);
+	letter-spacing: -0.03em;
+}
+
+.t_H2 {
+	.m_Typography(@c_Black, "clear_sansbold", 1.875rem);
+}
+
+.t_H3 {
+	.m_Typography(@c_Black, "clear_sansbold", 1.5rem);
+}
+
+.t_H4 {
+	.m_Typography(@c_Black, "clear_sansbold", 1.25rem);
+}
+
+.t_Introduction {
+	.m_Typography(@c_White, "clear_sansregular", 1.125rem);
+}
+
+.t_Body {
+	.m_Typography(@c_Black, "clear_sansregular", 1rem);
+}
+
+.t_Button {
+	.m_Typography(@c_White, "clear_sansbold", 1rem);
+}

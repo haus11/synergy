@@ -1,7 +1,21 @@
 /*
  * Adding Fonts
 */
+@import "../../font/clear-sans-fontfacekit/web_fonts/clearsans_bold_macroman/stylesheet.css";
+@import "../../font/clear-sans-fontfacekit/web_fonts/clearsans_bolditalic_macroman/stylesheet.css";
+@import "../../font/clear-sans-fontfacekit/web_fonts/clearsans_italic_macroman/stylesheet.css";
+@import "../../font/clear-sans-fontfacekit/web_fonts/clearsans_light_macroman/stylesheet.css";
 @import "../../font/clear-sans-fontfacekit/web_fonts/clearsans_medium_macroman/stylesheet.css";
+@import "../../font/clear-sans-fontfacekit/web_fonts/clearsans_mediumitalic_macroman/stylesheet.css";
+@import "../../font/clear-sans-fontfacekit/web_fonts/clearsans_regular_macroman/stylesheet.css";
+@import "../../font/clear-sans-fontfacekit/web_fonts/clearsans_thin_macroman/stylesheet.css";
+
+/*
+ * Less includes
+*/
+@import "less_includes/colors.less";
+@import "less_includes/typography.less";
+@import "less_includes/mixins.less";
 
 /**
  * Apply a natural box layout model to all elements
@@ -59,17 +73,34 @@ body {
  * Presentation layer
 */
 .p-welcomebox {
-    width: 450px;
-    height: 190px;
-    padding: 10px;
+    width: 510px;
+    padding: 15px;
+    background-color: fade(@c_SunrisePurple, 85%);
+    .m_BorderRadius(1px);
 }
 .p-title {
+    .t_H1();
     text-align: center;
 }
-#welcome-blur {
-    background-color: rgba(240,240,240,0.8);
-    position: absolute;
-    overflow: hidden;
+.p-paragraph {
+    .t_Introduction();
+}
+// Buttons
+.p-btn {
+    .t_Button();
+    .m_BorderRadius(1px);
+    padding: 10px 0px;
+    text-align: center;
+    width: 155px;
+    text-transform: uppercase;
+}
+.p-btn-succ {
+    .p-btn();
+    background-color: @c_Success;
+}
+.p-btn-erro {
+    .p-btn();
+    background-color: @c_Error;
 }
 /*
  * Layout layer
@@ -80,13 +111,20 @@ body {
 }
 
 .l-title {
-    margin-bottom: 10px;
+    margin-bottom: 20px;
 }
 
 .l-paragraph {
-    margin-bottom: 15px;
+    margin-bottom: 20px;
 }
 
 .l-welcome-btn {
     text-align: center;
+}
+
+.l-btn {
+    margin-right: 10px;
+}
+.l-btn:last-child {
+    margin-right: 0px;
 }
