@@ -19,6 +19,7 @@ function SpeechRecognition(_speechList) {
     this.isRecognizing = false;
     this.language = 'de-DE';
     this.speechList = _speechList;
+    this.speechError = false;
 
     this.init();
 }
@@ -96,10 +97,13 @@ SpeechRecognition.prototype.onResult = function(event) {
                         };
 
                         this.emit(currentDetectionItem.emit, eventData);
+                        return;
                     }
                 }
             }
         }
+        
+        console.log('nichts brauchbares');
     }
     else
     {
@@ -114,18 +118,28 @@ SpeechRecognition.prototype.trimSpaces = function(_string)
 
 SpeechRecognition.prototype.onEnd = function() {
     this.isRecognizing = false;
-    this.start();
+    
+    if(!this.speechError)
+    {
+        this.start();
+    }
+    
     console.log("speech recognition ended");
 };
 
 SpeechRecognition.prototype.onError = function(event) {
+    
+    
+    
     if (event.error === 'no-speech') {
         console.log('Error: no speech');
     }
     if (event.error === 'audio-capture') {
         console.log('Error: no microphone');
+        this.speechError = true;
     }
     if (event.error === 'not-allowed') {
         console.log('Error: not allowed');
+        this.speechError = true;
     }
 };

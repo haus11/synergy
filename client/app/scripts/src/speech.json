@@ -14,7 +14,31 @@
             "Ich kann die Oberfläche #REPLACE# nicht benutzen."
           ]
         }
-      },  
+      },
+      {
+        "emit": "thanks",
+        "detect": "Danke",
+        "answers": {
+          "success": [
+            "Gerne doch.",
+            "Kein Problem.",
+            "Ich freue mich dir geholfen zu haben.",
+            "Das habe ich doch gern getan."
+          ]
+        }
+      },
+      {
+        "emit": "setTerrain",
+        "detect": "Relief",
+        "answers": {
+          "success": [
+            "Ich habe das Relief #REPLACE#."
+          ],
+          "fail": [
+            "Ich kann das Relief nicht einschalten."
+          ]
+        }
+      },
       {
         "emit": "navigateTo",
         "detect": "suche",
