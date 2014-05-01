@@ -42,6 +42,7 @@
                 <button>CLOSE</button>
             </div>
         </div>
+
         <!-- visualizer stuff -->
             <div id="app" class="show-hands" >
                 <button id="showHands">Show Hands</button>
@@ -73,15 +74,13 @@
         <script type="text/javascript" src="bower_components/Vague.js/Vague.js"></script>        
         <script type="text/javascript" src="scripts/dist/build.js"></script>
 
-        <script>
+        <script type="text/javascript">
             var Vague = $('#welcome-blur').Vague({
-                intensity:      10,      // Blur Intensity
-                forceSVGUrl:    false   // Force absolute path to the SVG filter
-            });
-
+    			intensity:      10,      // Blur Intensity
+    			forceSVGUrl:    false   // Force absolute path to the SVG filter
+			});
             Vague.blur();
         </script>
-        <!-- visualizer stuff end -->
 
         <!-- Google Analytics: change UA-XXXXX-X to be your site's ID. -->
         <!--<script>

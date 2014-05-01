@@ -25,8 +25,9 @@ var cesiumWorld = new CesiumWorld(speechRecognition, speechSynthesis);
 var cameraControls = new THREE.LeapCameraControls(cesiumWorld.widget.scene.camera);
 
 
-(function update() { 
+(function update() {
 
+///test
 	requestAnimationFrame(update);
 
 
@@ -39,3 +40,5 @@ var cameraControls = new THREE.LeapCameraControls(cesiumWorld.widget.scene.camer
     //console.log(leapConnection.currentFrame.hands);
 
 }());
+
+//new

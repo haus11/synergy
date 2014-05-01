@@ -4,12 +4,12 @@
  */
 
 function moveFinger(Finger, posX, posY, posZ, dirX, dirY, dirZ) {
-    Finger.style.webkitTransform = Finger.style.mozTransform = 
+    Finger.style.webkitTransform = Finger.style.mozTransform =
     Finger.style.transform = "translateX("+posX+"px) translateY("+posY+"px) translateZ("+posZ+"px) rotateX("+dirX+"deg) rotateY(0deg) rotateZ("+dirZ+"deg)";
 }
 
 function moveSphere(Sphere, posX, posY, posZ, rotX, rotY, rotZ) {
-  Sphere.style.webkitTransform = Sphere.style.mozTransform = 
+  Sphere.style.webkitTransform = Sphere.style.mozTransform =
   Sphere.style.transform = "translateX("+posX+"px) translateY("+posY+"px) translateZ("+posZ+"px) rotateX("+rotX+"deg) rotateY(0deg) rotateZ(0deg)";
 }
 
@@ -18,8 +18,8 @@ var spheres = {};
 Leap.loop(function(frame) {
     var fingerIds = {};
     var handIds = {};
-    if (frame.hands === undefined ) { 
-      var handsLength = 0 
+    if (frame.hands === undefined ) {
+      var handsLength = 0
     } else {
       var handsLength = frame.hands.length;
     }
@@ -36,7 +36,7 @@ Leap.loop(function(frame) {
       if (!sphere) {
         var sphereDiv = document.getElementById("sphere").cloneNode(true);
             sphereDiv.setAttribute('id',hand.id);
-            sphereDiv.style.backgroundColor='#A3A3A3';  //'#'+Math.floor(Math.random()*16777215).toString(16);
+            sphereDiv.style.backgroundColor='#FF0000';  //'#'+Math.floor(Math.random()*16777215).toString(16);
             document.getElementById('scene').appendChild(sphereDiv);
             spheres[hand.id] = hand.id;
       } else {
@@ -67,7 +67,7 @@ Leap.loop(function(frame) {
       if (!finger) {
         var fingerDiv = document.getElementById("finger").cloneNode(true);
             fingerDiv.setAttribute('id',pointable.id);
-            fingerDiv.style.backgroundColor='#A3A3A3';  //'#'+Math.floor(Math.random()*16777215).toString(16);
+            fingerDiv.style.backgroundColor='#FF0000';  //'#'+Math.floor(Math.random()*16777215).toString(16);
             document.getElementById('scene').appendChild(fingerDiv);
             fingers[pointable.id] = pointable.id;
       } else {
@@ -92,5 +92,4 @@ Leap.loop(function(frame) {
       document.getElementById('app').setAttribute('class','');
     }, false);
 });
-
 
