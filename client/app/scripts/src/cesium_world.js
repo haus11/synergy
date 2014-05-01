@@ -56,6 +56,16 @@ function CesiumWorld(_speechRecognition, _speechSynthesis) {
         this.baseLayerPicker.viewModel.selectedItem = this.providerViewModels[2];
         this.geoCoder = new Cesium.Geocoder({'container' : 'cesiumGeocoder', 'scene' : this.widget.scene});
         this.ellipsoid = this.widget.centralBody.ellipsoid;
+        this.centralBody = this.widget.centralBody;
+        this.centralBody.depthTestAgainstTerrain = true;
+        console.log(this.centralBody.terrainProvider);
+        this.cesiumTerrainProviderMeshes = new Cesium.CesiumTerrainProvider({
+            url : 'http://cesiumjs.org/stk-terrain/tilesets/world/tiles',
+            credit : 'Terrain data courtesy Analytical Graphics, Inc.'
+        });
+
+        this.centralBody.terrainProvider = this.cesiumTerrainProviderMeshes;
+        
         this.speechRecognition = _speechRecognition;
         this.speechSynthesis = _speechSynthesis;
         
