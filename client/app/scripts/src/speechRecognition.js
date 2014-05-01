@@ -114,6 +114,7 @@ SpeechRecognition.prototype.trimSpaces = function(_string)
 
 SpeechRecognition.prototype.onEnd = function() {
     this.isRecognizing = false;
+    this.start();
     console.log("speech recognition ended");
 };
 
