@@ -17,7 +17,7 @@
         <link rel="stylesheet" href="scripts/src/cesium/Build/Cesium/Widgets/CesiumWidget/CesiumWidget.css">
 
         <!-- visualizer stuff -->
-            <link href='leap/visualizer/css/visualizer.css' rel='stylesheet' type='text/css'>
+        <link href='leap/visualizer/css/visualizer.css' rel='stylesheet' type='text/css'>
         <!-- visualizer stuff end -->
     </head>
     <body>
@@ -69,19 +69,18 @@
         <script type="text/javascript" src="scripts/src/cesium/Build/Cesium/Cesium.js"></script>
         <script type="text/javascript" src="bower_components/socket.io-client/dist/socket.io.js"></script>
         <script type="text/javascript" src="bower_components/leapjs/leap.js"></script>
-		<script type="text/javascript" src="leap/LeapCameraControls.js"></script>		<script type="text/javascript" src="bower_components/Vague.js/Vague.js"></script>        <script type="text/javascript" src="scripts/dist/build.js"></script>
+		<script type="text/javascript" src="leap/gesture/LeapCameraControls.js"></script>		
+        <script type="text/javascript" src="bower_components/Vague.js/Vague.js"></script>        
+        <script type="text/javascript" src="scripts/dist/build.js"></script>
 
-        <!-- visualizer stuff -->
-            <script type="text/javascript" src="leap/visualizer/js/visualizer.js"></script>
-            <script type="text/javascript" src="leap/visualizer/js/leap.min.js"></script>
-            <script>
+        <script>
             var Vague = $('#welcome-blur').Vague({
-    intensity:      10,      // Blur Intensity
-    forceSVGUrl:    false   // Force absolute path to the SVG filter
-});
+                intensity:      10,      // Blur Intensity
+                forceSVGUrl:    false   // Force absolute path to the SVG filter
+            });
 
-Vague.blur();
-            </script>
+            Vague.blur();
+        </script>
         <!-- visualizer stuff end -->
 
         <!-- Google Analytics: change UA-XXXXX-X to be your site's ID. -->

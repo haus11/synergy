@@ -36,5 +36,6 @@ var cameraControls = new THREE.LeapCameraControls(cesiumWorld.widget.scene.camer
     cesiumWorld.update();
 
     cameraControls.update(leapConnection.currentFrame);
+    //console.log(leapConnection.currentFrame.hands);
 
 }());
