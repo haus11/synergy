@@ -5,6 +5,8 @@
     "normalize-css": "~3.0.1",
     "socket.io-client": "~0.9.16",
     "leapjs": "~0.4.3",
-    "threejs": "*"
+    "threejs": "*",
+    "jquery": "2.0.3",
+    "Vague.js": "~0.0.3"
   }
 }
