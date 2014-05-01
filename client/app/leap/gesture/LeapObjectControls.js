@@ -45,7 +45,7 @@ THREE.LeapObjectControls = function(camera, object) {
   this.scaleMax           = 10;
   
   // pan
-  this.panEnabled         = true;
+  this.panEnabled         = false;
   this.panSpeed           = 1.0;
   this.panHands           = 2;
   this.panFingers         = [6, 12];
