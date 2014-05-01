@@ -77,13 +77,13 @@
         transform: rotateX(90deg);
       }
 
-      //.cube {
-        //background-color: red;
-        //-webkit-transform-style: preserve-3d;
-        //transform-style: preserve-3d;
-        //-webkit-transform: translate3d(19.5em, 19.5em, 0em);
-        //transform: translate3d(19.5em, 19.5em, 0em);
-      //}
+      .cube {
+        background-color: grey;
+        -webkit-transform-style: preserve-3d;
+        transform-style: preserve-3d;
+        -webkit-transform: translate3d(19.5em, 19.5em, 0em);
+        transform: translate3d(19.5em, 19.5em, 0em);
+      }
 
       .finger,
       .sphere {
@@ -106,7 +106,7 @@
 
       .sphere {
         opacity: .3;
-        //display: none;
+        display: none;
         font-size: 85px;
       }
 
