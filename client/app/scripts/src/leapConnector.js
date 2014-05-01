@@ -67,5 +67,5 @@ LeapConnector.prototype.setupGestureRecognizer = function() {
 
 
 LeapConnector.prototype.update = function() {
-	// body...
+	this.currentFrame = this.controller.frame();
 };

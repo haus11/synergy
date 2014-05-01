@@ -1,4 +1,4 @@
-/* globals requestAnimationFrame*/
+/* globals requestAnimationFrame, THREE */
 
 // Require all needed modules here
 var LeapConnector = require('./leapConnector.js');
@@ -21,12 +21,20 @@ var speechRecognition = new SpeechRecognition();
 
 var cesiumWorld = new CesiumWorld(speechRecognition);
 
+
+var cameraControls = new THREE.LeapCameraControls(cesiumWorld.widget.scene.camera);
+
+
 (function update() {
 
 	requestAnimationFrame(update);
 
+
+
 	leapConnection.update();
 	//renderer.update();
-        cesiumWorld.update();
+    cesiumWorld.update();
+
+    cameraControls.update(leapConnection.currentFrame);
 
 }());
