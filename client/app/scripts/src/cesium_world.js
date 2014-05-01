@@ -1,4 +1,4 @@
-/* globals Cesium, CesiumWorld */
+/* globals Cesium, CesiumWorld, window */
 
 /**
 * Export for require statemant
@@ -9,7 +9,7 @@ module.exports = CesiumWorld;
 /**
 * Constructor
 */
-function CesiumWorld(_speechRecognition) {
+function CesiumWorld(_speechRecognition, _speechSynthesis) {
 
         this.providerViewModels = [];
         this.providerViewModels.push(new Cesium.ImageryProviderViewModel({
@@ -55,12 +55,10 @@ function CesiumWorld(_speechRecognition) {
         this.baseLayerPicker = new Cesium.BaseLayerPicker('baseLayerContainer', this.layers, this.providerViewModels);
         this.baseLayerPicker.viewModel.selectedItem = this.providerViewModels[2];
         this.geoCoder = new Cesium.Geocoder({'container' : 'cesiumGeocoder', 'scene' : this.widget.scene});
+        this.ellipsoid = this.widget.centralBody.ellipsoid;
         this.speechRecognition = _speechRecognition;
+        this.speechSynthesis = _speechSynthesis;
         
-        console.log('Up Vector: ' + this.widget.scene.camera.up);
-
-        
-        this.widget.resize();
         this.speechRecognition.on('navigateTo', function(event)
         {
             //console.log(event.action);
@@ -73,8 +71,96 @@ function CesiumWorld(_speechRecognition) {
             _this.changeLayer(event.action);
         });
         
+        this.speechRecognition.on('moveForward', function(event)
+        {
+            console.log(event);
+            _this.move('forward');
+        });
+        
+        this.speechRecognition.on('moveBackward', function(event)
+        {
+            console.log(event);
+            _this.move('backward');
+        });
+        
+        this.speechRecognition.on('moveUp', function(event)
+        {
+            console.log(event);
+            _this.move('up');
+        });
+        
+        this.speechRecognition.on('moveDown', function(event)
+        {
+            console.log(event);
+            _this.move('down');
+        });
+        
+        this.speechRecognition.on('moveLeft', function(event)
+        {
+            console.log(event);
+            _this.move('left');
+        });
+        
+        this.speechRecognition.on('moveRight', function(event)
+        {
+            console.log(event);
+            _this.move('right');
+        });
+        
+        this.speechRecognition.on('gnhi', function(event)
+        {
+            console.log(event);
+            _this.geoCoder.viewModel.searchText = 'Odessa, Ukraine';
+            _this.geoCoder.viewModel.search();
+        });
+        
         this.init();
 }
+
+CesiumWorld.prototype.move = function(_direction) {
+    
+    var moveRate = this.ellipsoid.cartesianToCartographic(this.widget.scene.camera.position).height / 1.2;
+    
+    switch(_direction)
+    {
+        case 'forward':
+        {
+            this.widget.scene.camera.moveForward(moveRate);
+            this.speechSynthesis.answer('moveForward', true);
+            break;
+        }
+        case 'backward':
+        {
+            this.widget.scene.camera.moveBackward(moveRate);
+            this.speechSynthesis.answer('moveBackward', true);
+            break;
+        }
+        case 'up':
+        {
+            this.widget.scene.camera.moveUp(moveRate);
+            this.speechSynthesis.answer('moveUp', true);
+            break;
+        }
+        case 'down':
+        {
+            this.widget.scene.camera.moveDown(moveRate);
+            this.speechSynthesis.answer('moveDown', true);
+            break;
+        }
+        case 'left':
+        {
+            this.widget.scene.camera.moveLeft(moveRate);
+            this.speechSynthesis.answer('moveLeft', true);
+            break;
+        }
+        case 'right':
+        {
+            this.widget.scene.camera.moveRight(moveRate);
+            this.speechSynthesis.answer('moveRight', true);
+            break;
+        }
+    }
+};
 
 
 CesiumWorld.prototype.init = function() {
@@ -83,8 +169,26 @@ CesiumWorld.prototype.init = function() {
 };
 
 CesiumWorld.prototype.flyTo = function(_location) {
+    
     this.geoCoder.viewModel.searchText = _location;
     this.geoCoder.viewModel.search();
+    
+    var _this = this;
+    
+    window.setTimeout(function(){
+        
+        var searchResult = _this.geoCoder.viewModel.searchText;
+
+        if(searchResult.indexOf('(not found)') !== -1) {
+
+            _this.speechSynthesis.answer('navigateTo', false, _location);
+        }
+        else
+        {
+            _this.speechSynthesis.answer('navigateTo', true, _location);
+        }
+        
+    }, 1000);
 };
 
 CesiumWorld.prototype.changeLayer = function(_layer) {
@@ -93,8 +197,12 @@ CesiumWorld.prototype.changeLayer = function(_layer) {
         if(this.providerViewModels[i].name === _layer)
         {
             this.baseLayerPicker.viewModel.selectedItem = this.providerViewModels[i];
+            this.speechSynthesis.answer('selectLayer', true, this.providerViewModels[i].name);
+            return;
         }
     }
+    
+    this.speechSynthesis.answer('selectLayer', false, _layer);
 };
 
 
