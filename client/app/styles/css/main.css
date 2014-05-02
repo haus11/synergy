@@ -115,6 +115,10 @@ body {
   padding: 0;
   margin: 0;
   overflow: hidden;
+  position: relative;
+}
+.cesium-widget-credits {
+  display: none!important;
 }
 #app {
   position: relative;
