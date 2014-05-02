@@ -16,6 +16,30 @@
         }
       },
       {
+        "emit": "flightMode",
+        "detect": "Flugmodus",
+        "answers": {
+          "success": [
+            "Ich habe den Flugmodus aktiviert."
+          ],
+          "fail": [
+            "Ich konnte den Flugmodus nicht aktivieren."
+          ]
+        }
+      },
+      {
+        "emit": "standardMode",
+        "detect": "Standardmodus",
+        "answers": {
+          "success": [
+            "Ich habe den Standardmodus aktiviert."
+          ],
+          "fail": [
+            "Ich konnte den Standardmodus nicht aktivieren."
+          ]
+        }
+      },
+      {
         "emit": "thanks",
         "detect": "Danke",
         "answers": {

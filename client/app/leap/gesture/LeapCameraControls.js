@@ -5,16 +5,22 @@
  * 
  */
 
-THREE.LeapCameraControls = function(camera) {
+THREE.LeapCameraControls = function(camera, ellipsoid) {
   var _this = this;
 
-  _this.camera = camera;
+  _this.camera    = camera;
+  _this.ellipsoid = ellipsoid;
 
   // api
   this.enabled      = true;
   this.target       = new THREE.Vector3(0, 0, 0);
   this.step         = (camera.position.z == 0 ? Math.pow(10, (Math.log(camera.frustum.near) + Math.log(camera.frustum.far))/Math.log(10))/10.0 : camera.position.z);
   this.fingerFactor = 2;
+<<<<<<< HEAD
+=======
+  this.startZ       = _this.camera.position.z;
+  this.mode         = 'standard';
+>>>>>>> adbc997f75ce3de96ce037da5053590dda281c45
 
   // `...Hands`       : integer or range given as an array of length 2
   // `...Fingers`     : integer or range given as an array of length 2
@@ -258,82 +264,12 @@ THREE.LeapCameraControls = function(camera) {
     };
   };
 
-    // speed controls
-        var startZ         = _this.camera.position.z;
-        var speedFactor    = this.zoomSpeed / startZ;
-        var initialSpeed   = this.zoomSpeed;
   this.zoomCamera = function(frame) {
             
     if (_this.zoomEnabled && _this.applyGesture(frame, 'zoom')) {
       var z = _this.position(frame, 'zoom')[2];
       if (!_zoomZLast) _zoomZLast = z;
       var zDelta = z - _zoomZLast;
-
-      var positionZ = _this.camera.position.z;
-
-//      console.log ('lastZ: ' + _zoomZLastBefore);
-//             make zoom speed smoother when getting closer to earth and higher when going away 
-    if (_zoomZLast > _zoomZLastBefore && _this.zoomSpeed < 0.2)
-    {}
-      
-    else if (_zoomZLast > _zoomZLastBefore) {
-        _this.zoomSpeed = _this.zoomSpeed - 0.08;
-    }
-      
-    else {
-        _this.zoomSpeed = _this.zoomSpeed + 0.08;
-    }
-//      else if (positionZ < startZ * 0.75 && positionZ > startZ * 0.66) {
-////         console.log('elseif1');
-//         _this.zoomSpeed = (speedFactor * positionZ) / 1.5;
-//      }
-//      else {
-////          console.log ('else');
-//         _this.zoomSpeed = speedFactor * positionZ;
-//      }
-//      console.log ('zoomspeed: ' + _this.zoomSpeed);
-//      console.log ('Z: ' + _zoomZLast);
-      
-      // make zoom speed smoother when getting closer to earth and higher when going away 
-      
-//      if (_zoom)
-          
-      if (positionZ > startZ) {
-         _this.zoomSpeed = initialSpeed;
-      }
-//      
-//      else if (positionZ < startZ * 0.75 && positionZ > startZ * 0.66) {
-////         console.log('elseif1');
-//         _this.zoomSpeed = (speedFactor * positionZ) / 1.5;
-//      }
-//      else if (positionZ < startZ * 0.66 && positionZ > startZ * 0.6) {
-////          console.log('elseif2');
-//          _this.zoomSpeed = (speedFactor * positionZ) / 4;
-//      }
-//      else if (positionZ < startZ * 0.6 && positionZ > startZ * 0.54) {
-////          console.log('elseif3');
-//          _this.zoomSpeed = (speedFactor * positionZ) / 12;
-//      }
-//      else if (positionZ < startZ * 0.54 && positionZ > startZ * 0.50) {
-////          console.log('elseif4');
-//          _this.zoomSpeed = (speedFactor * positionZ) / 20;
-//      }
-//      else if (positionZ < startZ * 0.50 && positionZ > startZ * 0.40) {
-////          console.log('elseif5');
-//          _this.zoomSpeed = (speedFactor * positionZ) / 40;
-//      }
-//      else if (positionZ < startZ * 0.40) {
-////          console.log('elseif6');
-//          _this.zoomSpeed = (speedFactor * positionZ) / 80;
-//      }
-//      else {
-////          console.log ('else');
-//         _this.zoomSpeed = speedFactor * positionZ;
-//      }
-//      console.log ('startz: ' + startZ);
-//      console.log ('zoomspeed: ' + _this.zoomSpeed);
-//      console.log ('Z: ' + positionZ);
-      
 
       var lengthDelta = _this.zoomTransform(zDelta);
       var absoluteLength = Math.abs(lengthDelta);
@@ -357,7 +293,6 @@ THREE.LeapCameraControls = function(camera) {
         _this.camera.position.sub(t);        
       };
       */
-      _zoomZLastBefore  = _zoomZLast;
       _zoomZLast        = z; 
       _rotateXLast      = null;
       _rotateYLast      = null;
@@ -420,12 +355,66 @@ THREE.LeapCameraControls = function(camera) {
     };
   };
 
+  this.airplaneCamera = function(frame) {
+    var data = frame.data;
+    if (frame.valid && data.hands.length === 1) {
+      var fingers = data.pointables;
+      if (fingers.length > 1) {
+        data = data.hands[0];
+        if (data.timeVisible > 0.75) {
+          var cesiumLeap = this,
+          camera = cesiumLeap.camera,
+          movement = {},
+          cameraHeight = cesiumLeap.ellipsoid.cartesianToCartographic(camera.position).height,
+          moveRate = cameraHeight / 100.0;
+
+          // pan - x,y
+          movement.x = data.palmPosition[0];
+          movement.y = data.palmPosition[2];
+
+          //zoom - z // height above leap
+          movement.z = data.palmPosition[1];
+
+          //pitch - pitch
+          var normal = data.palmNormal;
+          movement.pitch = -1 * normal[2]; // leap motion has it that negative is sloping upwards, flipping it for google earth
+          //Math.atan2(normal.z, normal.y) * 180/math.pi + 180;
+          movement.rotate = data.direction[0];
+          //yaw - yaw
+          movement.yaw = -1 * normal[0]; // roll?
+          // LeapMotion flips its roll angles as well
+
+          // this 'mid' var seems to be a natural mid point in the 'z'
+          // (or vertcal distance above device)
+          // direction that is used for whether you are closer to the device
+          // or away from it.
+          var mid = 175;
+          var normalized = (movement.z - mid) / -100;
+
+          camera.moveForward(normalized * moveRate);
+          camera.moveRight(movement.x * moveRate / 100);
+          camera.moveDown(movement.y * moveRate / 100);
+
+          camera.lookUp(movement.pitch / 100);
+
+          camera.twistRight(movement.yaw / 100);
+          camera.lookRight(movement.rotate / 100);
+        }
+      }
+    }
+  };
+
   this.update = function(frame) {
 
     if (_this.enabled) {
-      _this.rotateCamera(frame);
-      _this.zoomCamera(frame);
-      _this.panCamera(frame);
+      if (_this.mode === 'standard') {
+        _this.rotateCamera(frame);
+        _this.zoomCamera(frame);
+        _this.panCamera(frame);
+      }
+      else if (_this.mode === 'flight') {
+        _this.airplaneCamera(frame);
+      }
     };
   };
 };

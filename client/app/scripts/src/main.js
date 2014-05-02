@@ -15,12 +15,25 @@ var leapConnection    = new LeapConnector();
 var speechRecognition = new SpeechRecognition(speechList);
 var speechSynthesis   = new SpeechSynthesis(speechList);
 var cesiumWorld       = new CesiumWorld(speechRecognition, speechSynthesis);
-var cameraControls    = new THREE.LeapCameraControls(cesiumWorld.widget.scene.camera);
+var cameraControls    = new THREE.LeapCameraControls(cesiumWorld.widget.scene.camera, cesiumWorld.ellipsoid);
 
 speechRecognition.on('thanks', function(){
     speechSynthesis.answer('thanks', true);
 });
 
+speechRecognition.on('flightMode', function() {
+
+	cameraControls.mode = 'flight';
+
+	speechSynthesis.answer('flightMode', true);
+});
+
+speechRecognition.on('standartMode', function() {
+
+	cameraControls.mode = 'standard';
+
+	speechSynthesis.answer('standartMode', true);
+});
 
 (function update() {
 	requestAnimationFrame(update);
