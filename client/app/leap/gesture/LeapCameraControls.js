@@ -51,7 +51,7 @@ THREE.LeapCameraControls = function(camera, ellipsoid) {
   
   // pan
   this.panEnabled          = true;
-  this.panSpeed            = 2.0;
+  this.panSpeed            = 2.5;
   this.panHands            = 2;
   this.panFingers          = [6, 12];
   this.panRightHanded      = true;
@@ -66,8 +66,14 @@ THREE.LeapCameraControls = function(camera, ellipsoid) {
   var _panYLast            = null;
   var _panZLast            = null;
   
-  var _zoomZLastBefore      = _zoomZLast;
+  // zoom stuff
+  this.zoomInMax           = 50;
+  this.zoomOutMax          = 50000000;
+  this.zoomMoveRateFactor  = 30;
 
+  // pan Stuff
+  this.panSpeedInit        = this.panSpeed;
+  
   // helpers
   this.transformFactor = function(action) {
     switch(action) {
@@ -268,15 +274,14 @@ THREE.LeapCameraControls = function(camera, ellipsoid) {
       if (!_zoomZLast) _zoomZLast = z;
       var zDelta = z - _zoomZLast;
 
-      var lengthDelta = _this.zoomTransform(zDelta);
+    var lengthDelta = _this.zoomTransform(zDelta);
 //      var absoluteLength = Math.abs(lengthDelta);
 
-        var cameraHeight = _this.ellipsoid.cartesianToCartographic(_this.camera.position).height;
-        var moveRate = cameraHeight / 30;
-        console.log ('Camera Height: ' + cameraHeight);
+    var cameraHeight = _this.ellipsoid.cartesianToCartographic(_this.camera.position).height;
+    var moveRate = cameraHeight / _this.zoomMoveRateFactor;
         
     if (lengthDelta > 0) {
-        if (cameraHeight < 50) {
+        if (cameraHeight < _this.zoomInMax) {
             //dont zoom in anymore
         }
         else {
@@ -284,7 +289,7 @@ THREE.LeapCameraControls = function(camera, ellipsoid) {
         }
     }
     else {
-        if (cameraHeight > 50000000) {
+        if (cameraHeight > _this.zoomOutMax) {
             //dont zoom out anymore
         }
         else {
@@ -330,8 +335,29 @@ THREE.LeapCameraControls = function(camera, ellipsoid) {
       //_this.camera.position.sub(v);
       //_this.target.sub(v);
 
+        var cameraHeight = _this.ellipsoid.cartesianToCartographic(_this.camera.position).height;
+        console.log ('Height:' + cameraHeight);
+        
+        if (cameraHeight < 10000) {
+            _this.panSpeed = 0.001;
+        }
+        if (cameraHeight < 50000 && cameraHeight > 10000) {
+            _this.panSpeed = 0.01;
+        }
+        else if (cameraHeight < 500000 && cameraHeight > 50000) {
+            _this.panSpeed = 0.1;
+        }
+        else if (cameraHeight > 500001 && cameraHeight < 1500000) {
+            _this.panSpeed = 0.8;
+        }
+        else {
+            _this.panSpeed = _this.panSpeedInit;
+        }
+        
+        console.log ('Speed: ' + _this.panSpeed);
+        
       var absoluteX = Math.abs(_this.panTransform(xDelta));
-
+    
       if(xDelta > 0) {
         _this.camera.moveLeft(absoluteX);
       }
