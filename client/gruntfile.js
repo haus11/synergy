@@ -76,7 +76,7 @@ module.exports = function (grunt) {
 
         watch: {
             scripts: {
-                files: ['app/scripts/src/**/*.js', 'app/leap/**/*.html', 'app/leap/**/*.js'],
+                files: ['app/scripts/src/**/*.js', 'app/leap/gesture/*.js'],
                 tasks: ['jshint:scripts', 'browserify'],
                 options: {
                     spawn: false
