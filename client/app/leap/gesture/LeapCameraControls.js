@@ -16,6 +16,7 @@ THREE.LeapCameraControls = function(camera, ellipsoid) {
   this.target       = new THREE.Vector3(0, 0, 0);
   this.step         = (camera.position.z == 0 ? Math.pow(10, (Math.log(camera.frustum.near) + Math.log(camera.frustum.far))/Math.log(10))/10.0 : camera.position.z);
   this.fingerFactor = 2;
+
   this.startZ       = _this.camera.position.z;
   this.mode         = 'standard';
 
@@ -27,7 +28,7 @@ THREE.LeapCameraControls = function(camera, ellipsoid) {
 
   // rotation
   this.rotateEnabled       = true;
-  this.rotateSpeed         = 1.0;
+  this.rotateSpeed         = 0.5;
   this.rotateHands         = 1;
   this.rotateFingers       = [2, 3]; 
   this.rotateRightHanded   = true;
@@ -38,18 +39,19 @@ THREE.LeapCameraControls = function(camera, ellipsoid) {
   
   // zoom
   this.zoomEnabled         = true;
-  this.zoomSpeed           = 5.0;
+  this.zoomSpeed           = 4.0;
   this.zoomHands           = 1;
   this.zoomFingers         = [4, 5];
   this.zoomRightHanded     = true;
   this.zoomHandPosition    = true;
-  this.zoomStabilized      = false;
+  this.zoomStabilized      = true;
   this.zoomMin             = _this.camera.frustum.near;
-  this.zoomMax             = _this.camera.frustum.far;
+  this.zoomMax             = _this.camera.maximumZoomFactor;
+  //this.zoomMax             = _this.camera.frustum.far;
   
   // pan
   this.panEnabled          = true;
-  this.panSpeed            = 4.0;
+  this.panSpeed            = 2.5;
   this.panHands            = 2;
   this.panFingers          = [6, 12];
   this.panRightHanded      = true;
@@ -63,7 +65,15 @@ THREE.LeapCameraControls = function(camera, ellipsoid) {
   var _panXLast            = null;
   var _panYLast            = null;
   var _panZLast            = null;
+  
+  // zoom stuff
+  this.zoomInMax           = 50;
+  this.zoomOutMax          = 50000000;
+  this.zoomMoveRateFactor  = 30;
 
+  // pan Stuff
+  this.panSpeedInit        = this.panSpeed;
+  
   // helpers
   this.transformFactor = function(action) {
     switch(action) {
@@ -145,7 +155,7 @@ THREE.LeapCameraControls = function(camera, ellipsoid) {
 
   this.hand = function(frame, action) {
     var hds = frame.hands;
-
+   
     if (hds.length > 0) {
       if (hds.length == 1) {
         return hds[0];
@@ -158,6 +168,7 @@ THREE.LeapCameraControls = function(camera, ellipsoid) {
           lh = hds[1];
           rh = hds[0];
         }
+
         switch(action) {
           case 'rotate':
             if (_this.rotateRightHanded) {
@@ -257,47 +268,34 @@ THREE.LeapCameraControls = function(camera, ellipsoid) {
   };
 
   this.zoomCamera = function(frame) {
-
+            
     if (_this.zoomEnabled && _this.applyGesture(frame, 'zoom')) {
       var z = _this.position(frame, 'zoom')[2];
       if (!_zoomZLast) _zoomZLast = z;
       var zDelta = z - _zoomZLast;
 
-      /*
-      var speedFactor = 5 / _this.startZ;
-      if (_this.camera.position.z > _this.startZ) {
-         _this.zoomSpeed = 5;
-      }
-      else if (_this.camera.position.z < (_this.startZ / 2)) {
-         _this.zoomSpeed = Math.sqrt((speedFactor * _this.camera.position.z / 2));
-      }
-      
-      else {
-         _this.zoomSpeed = speedFactor * _this.camera.position.z;
-      }
-      */
+    var lengthDelta = _this.zoomTransform(zDelta);
+//      var absoluteLength = Math.abs(lengthDelta);
 
-      var min = _this.zoomMin;
-      var max = _this.zoomMax;
-      var speedMin = 0;
-      var speedMax = 100;
-      var value    = _this.camera.position.z;
-
-      _this.zoomSpeed = (((speedMax - speedMin) * (value - min)) / (max - min)) + speedMin;
-
-
-      //console.log(_this.zoomSpeed);
-
-
-      var lengthDelta = _this.zoomTransform(zDelta);
-      var absoluteLength = Math.abs(lengthDelta);
-
-      if(lengthDelta > 0) {
-        _this.camera.zoomIn(absoluteLength);
-      }
-      else {
-        _this.camera.zoomOut(absoluteLength);
-      }
+    var cameraHeight = _this.ellipsoid.cartesianToCartographic(_this.camera.position).height;
+    var moveRate = cameraHeight / _this.zoomMoveRateFactor;
+        
+    if (lengthDelta > 0) {
+        if (cameraHeight < _this.zoomInMax) {
+            //dont zoom in anymore
+        }
+        else {
+            _this.camera.moveForward(moveRate);
+        }
+    }
+    else {
+        if (cameraHeight > _this.zoomOutMax) {
+            //dont zoom out anymore
+        }
+        else {
+            _this.camera.moveBackward(moveRate);
+        }
+    }
       
       /*
       var t = new THREE.Vector3().subVectors(_this.camera.position, _this.target);
@@ -308,13 +306,12 @@ THREE.LeapCameraControls = function(camera, ellipsoid) {
         _this.camera.position.sub(t);        
       };
       */
-
-      _zoomZLast   = z; 
-      _rotateXLast = null;
-      _rotateYLast = null;
-      _panXLast    = null;
-      _panYLast    = null;
-      _panZLast    = null;
+      _zoomZLast        = z; 
+      _rotateXLast      = null;
+      _rotateYLast      = null;
+      _panXLast         = null;
+      _panYLast         = null;
+      _panZLast         = null;
     } else {
       _zoomZLast = null; 
     };
@@ -338,8 +335,29 @@ THREE.LeapCameraControls = function(camera, ellipsoid) {
       //_this.camera.position.sub(v);
       //_this.target.sub(v);
 
+        var cameraHeight = _this.ellipsoid.cartesianToCartographic(_this.camera.position).height;
+        console.log ('Height:' + cameraHeight);
+        
+        if (cameraHeight < 10000) {
+            _this.panSpeed = 0.001;
+        }
+        if (cameraHeight < 50000 && cameraHeight > 10000) {
+            _this.panSpeed = 0.01;
+        }
+        else if (cameraHeight < 500000 && cameraHeight > 50000) {
+            _this.panSpeed = 0.1;
+        }
+        else if (cameraHeight > 500001 && cameraHeight < 1500000) {
+            _this.panSpeed = 0.8;
+        }
+        else {
+            _this.panSpeed = _this.panSpeedInit;
+        }
+        
+        console.log ('Speed: ' + _this.panSpeed);
+        
       var absoluteX = Math.abs(_this.panTransform(xDelta));
-
+    
       if(xDelta > 0) {
         _this.camera.moveLeft(absoluteX);
       }
