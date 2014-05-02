@@ -16,11 +16,9 @@ THREE.LeapCameraControls = function(camera, ellipsoid) {
   this.target       = new THREE.Vector3(0, 0, 0);
   this.step         = (camera.position.z == 0 ? Math.pow(10, (Math.log(camera.frustum.near) + Math.log(camera.frustum.far))/Math.log(10))/10.0 : camera.position.z);
   this.fingerFactor = 2;
-<<<<<<< HEAD
-=======
+
   this.startZ       = _this.camera.position.z;
   this.mode         = 'standard';
->>>>>>> adbc997f75ce3de96ce037da5053590dda281c45
 
   // `...Hands`       : integer or range given as an array of length 2
   // `...Fingers`     : integer or range given as an array of length 2
@@ -87,7 +85,6 @@ THREE.LeapCameraControls = function(camera, ellipsoid) {
   };
 
   this.zoomTransform = function(delta) {
-      console.log (this.step);
     return _this.transformFactor('zoom') * THREE.Math.mapLinear(delta, -400, 400, -_this.step, _this.step);
   };
 
@@ -274,14 +271,15 @@ THREE.LeapCameraControls = function(camera, ellipsoid) {
       var lengthDelta = _this.zoomTransform(zDelta);
       var absoluteLength = Math.abs(lengthDelta);
 
-      if(lengthDelta > 0) {
         var cameraHeight = _this.ellipsoid.cartesianToCartographic(_this.camera.position).height;
-        var moveRate = cameraHeight / 100.0;
-        console.log (moveRoate);
+        var moveRate = cameraHeight / 30;
+        console.log ('Move Rate: ' + moveRate);
+        
+      if(lengthDelta > 0) {
         _this.camera.moveForward(moveRate);
       }
       else {
-        _this.camera.zoomOut(absoluteLength);
+        _this.camera.moveBackward(moveRate);
       }
       
       /*
