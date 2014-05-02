@@ -47,7 +47,7 @@ THREE.LeapCameraControls = function(camera) {
   
   // pan
   this.panEnabled          = true;
-  this.panSpeed            = 1.0;
+  this.panSpeed            = 4.0;
   this.panHands            = 2;
   this.panFingers          = [6, 12];
   this.panRightHanded      = true;
@@ -318,11 +318,31 @@ THREE.LeapCameraControls = function(camera) {
       var yDelta = y - _panYLast;
       var zDelta = z - _panZLast;
 
-      //var v = _this.camera.localToWorld(new THREE.Vector3(_this.panTransform(xDelta), _this.panTransform(yDelta), _this.panTransform(zDelta)));
-      v.sub(_this.camera.position);
+      //var v = new THREE.Vector3(_this.panTransform(xDelta), _this.panTransform(yDelta), _this.panTransform(zDelta))
+      //v.sub(_this.camera.position);
 
-      _this.camera.position.sub(v);
-      _this.target.sub(v);
+      //_this.camera.position.sub(v);
+      //_this.target.sub(v);
+
+      var absoluteX = Math.abs(_this.panTransform(xDelta));
+
+      if(xDelta > 0) {
+        _this.camera.moveLeft(absoluteX);
+      }
+      else {
+        _this.camera.moveRight(absoluteX);
+      }
+
+
+      var absoluteY = Math.abs(_this.panTransform(yDelta));
+
+      if(yDelta > 0) {
+        _this.camera.moveDown(absoluteY);
+      }
+      else {
+        _this.camera.moveUp(absoluteY);
+      }
+
 
       _panXLast    = x;
       _panYLast    = y;
