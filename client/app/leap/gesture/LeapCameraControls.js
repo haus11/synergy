@@ -15,7 +15,6 @@ THREE.LeapCameraControls = function(camera) {
   this.target       = new THREE.Vector3(0, 0, 0);
   this.step         = (camera.position.z == 0 ? Math.pow(10, (Math.log(camera.frustum.near) + Math.log(camera.frustum.far))/Math.log(10))/10.0 : camera.position.z);
   this.fingerFactor = 2;
-  this.startZ       = _this.camera.position.z;
 
   // `...Hands`       : integer or range given as an array of length 2
   // `...Fingers`     : integer or range given as an array of length 2
@@ -25,7 +24,7 @@ THREE.LeapCameraControls = function(camera) {
 
   // rotation
   this.rotateEnabled       = true;
-  this.rotateSpeed         = 1.0;
+  this.rotateSpeed         = 0.5;
   this.rotateHands         = 1;
   this.rotateFingers       = [2, 3]; 
   this.rotateRightHanded   = true;
@@ -36,18 +35,19 @@ THREE.LeapCameraControls = function(camera) {
   
   // zoom
   this.zoomEnabled         = true;
-  this.zoomSpeed           = 5.0;
+  this.zoomSpeed           = 4.0;
   this.zoomHands           = 1;
   this.zoomFingers         = [4, 5];
   this.zoomRightHanded     = true;
   this.zoomHandPosition    = true;
-  this.zoomStabilized      = false;
+  this.zoomStabilized      = true;
   this.zoomMin             = _this.camera.frustum.near;
-  this.zoomMax             = _this.camera.frustum.far;
+  this.zoomMax             = _this.camera.maximumZoomFactor;
+  //this.zoomMax             = _this.camera.frustum.far;
   
   // pan
   this.panEnabled          = true;
-  this.panSpeed            = 4.0;
+  this.panSpeed            = 2.0;
   this.panHands            = 2;
   this.panFingers          = [6, 12];
   this.panRightHanded      = true;
@@ -61,6 +61,8 @@ THREE.LeapCameraControls = function(camera) {
   var _panXLast            = null;
   var _panYLast            = null;
   var _panZLast            = null;
+  
+  var _zoomZLastBefore      = _zoomZLast;
 
   // helpers
   this.transformFactor = function(action) {
@@ -79,6 +81,7 @@ THREE.LeapCameraControls = function(camera) {
   };
 
   this.zoomTransform = function(delta) {
+      console.log (this.step);
     return _this.transformFactor('zoom') * THREE.Math.mapLinear(delta, -400, 400, -_this.step, _this.step);
   };
 
@@ -143,7 +146,7 @@ THREE.LeapCameraControls = function(camera) {
 
   this.hand = function(frame, action) {
     var hds = frame.hands;
-
+   
     if (hds.length > 0) {
       if (hds.length == 1) {
         return hds[0];
@@ -156,6 +159,7 @@ THREE.LeapCameraControls = function(camera) {
           lh = hds[1];
           rh = hds[0];
         }
+
         switch(action) {
           case 'rotate':
             if (_this.rotateRightHanded) {
@@ -254,32 +258,91 @@ THREE.LeapCameraControls = function(camera) {
     };
   };
 
+    // speed controls
+        var startZ         = _this.camera.position.z;
+        var speedFactor    = this.zoomSpeed / startZ;
+        var initialSpeed   = this.zoomSpeed;
   this.zoomCamera = function(frame) {
-
+            
     if (_this.zoomEnabled && _this.applyGesture(frame, 'zoom')) {
       var z = _this.position(frame, 'zoom')[2];
       if (!_zoomZLast) _zoomZLast = z;
       var zDelta = z - _zoomZLast;
 
-      var speedFactor = 5 / _this.startZ;
-      if (_this.camera.position.z > _this.startZ) {
-         _this.zoomSpeed = 5;
-      }
-      else if (_this.camera.position.z < (_this.startZ / 2)) {
-         _this.zoomSpeed = Math.sqrt((speedFactor * _this.camera.position.z / 2));
-      }
-      
-      else {
-         _this.zoomSpeed = speedFactor * _this.camera.position.z;
-      }
+      var positionZ = _this.camera.position.z;
 
+//      console.log ('lastZ: ' + _zoomZLastBefore);
+//             make zoom speed smoother when getting closer to earth and higher when going away 
+    if (_zoomZLast > _zoomZLastBefore && _this.zoomSpeed < 0.2)
+    {}
+      
+    else if (_zoomZLast > _zoomZLastBefore) {
+        _this.zoomSpeed = _this.zoomSpeed - 0.08;
+    }
+      
+    else {
+        _this.zoomSpeed = _this.zoomSpeed + 0.08;
+    }
+//      else if (positionZ < startZ * 0.75 && positionZ > startZ * 0.66) {
+////         console.log('elseif1');
+//         _this.zoomSpeed = (speedFactor * positionZ) / 1.5;
+//      }
+//      else {
+////          console.log ('else');
+//         _this.zoomSpeed = speedFactor * positionZ;
+//      }
+//      console.log ('zoomspeed: ' + _this.zoomSpeed);
+//      console.log ('Z: ' + _zoomZLast);
+      
+      // make zoom speed smoother when getting closer to earth and higher when going away 
+      
+//      if (_zoom)
+          
+      if (positionZ > startZ) {
+         _this.zoomSpeed = initialSpeed;
+      }
+//      
+//      else if (positionZ < startZ * 0.75 && positionZ > startZ * 0.66) {
+////         console.log('elseif1');
+//         _this.zoomSpeed = (speedFactor * positionZ) / 1.5;
+//      }
+//      else if (positionZ < startZ * 0.66 && positionZ > startZ * 0.6) {
+////          console.log('elseif2');
+//          _this.zoomSpeed = (speedFactor * positionZ) / 4;
+//      }
+//      else if (positionZ < startZ * 0.6 && positionZ > startZ * 0.54) {
+////          console.log('elseif3');
+//          _this.zoomSpeed = (speedFactor * positionZ) / 12;
+//      }
+//      else if (positionZ < startZ * 0.54 && positionZ > startZ * 0.50) {
+////          console.log('elseif4');
+//          _this.zoomSpeed = (speedFactor * positionZ) / 20;
+//      }
+//      else if (positionZ < startZ * 0.50 && positionZ > startZ * 0.40) {
+////          console.log('elseif5');
+//          _this.zoomSpeed = (speedFactor * positionZ) / 40;
+//      }
+//      else if (positionZ < startZ * 0.40) {
+////          console.log('elseif6');
+//          _this.zoomSpeed = (speedFactor * positionZ) / 80;
+//      }
+//      else {
+////          console.log ('else');
+//         _this.zoomSpeed = speedFactor * positionZ;
+//      }
+//      console.log ('startz: ' + startZ);
+//      console.log ('zoomspeed: ' + _this.zoomSpeed);
+//      console.log ('Z: ' + positionZ);
+      
 
       var lengthDelta = _this.zoomTransform(zDelta);
       var absoluteLength = Math.abs(lengthDelta);
 
-
       if(lengthDelta > 0) {
-        _this.camera.zoomIn(absoluteLength);
+        var cameraHeight = _this.ellipsoid.cartesianToCartographic(_this.camera.position).height;
+        var moveRate = cameraHeight / 100.0;
+        console.log (moveRoate);
+        _this.camera.moveForward(moveRate);
       }
       else {
         _this.camera.zoomOut(absoluteLength);
@@ -294,13 +357,13 @@ THREE.LeapCameraControls = function(camera) {
         _this.camera.position.sub(t);        
       };
       */
-
-      _zoomZLast   = z; 
-      _rotateXLast = null;
-      _rotateYLast = null;
-      _panXLast    = null;
-      _panYLast    = null;
-      _panZLast    = null;
+      _zoomZLastBefore  = _zoomZLast;
+      _zoomZLast        = z; 
+      _rotateXLast      = null;
+      _rotateYLast      = null;
+      _panXLast         = null;
+      _panYLast         = null;
+      _panZLast         = null;
     } else {
       _zoomZLast = null; 
     };
