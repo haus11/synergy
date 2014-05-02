@@ -53,15 +53,16 @@ function CesiumWorld(_speechRecognition, _speechSynthesis) {
         this.widget = new Cesium.CesiumWidget('cesiumContainer', {
             'imageryProvider': false,
             skyBox : new Cesium.SkyBox({
-            sources : {
-              positiveX : 'textures/SkyBox/TychoSkymapII.t3_08192x04096_80_px.jpg',
-              negativeX : 'textures/SkyBox/TychoSkymapII.t3_08192x04096_80_mx.jpg',
-              positiveY : 'textures/SkyBox/TychoSkymapII.t3_08192x04096_80_py.jpg',
-              negativeY : 'textures/SkyBox/TychoSkymapII.t3_08192x04096_80_my.jpg',
-              positiveZ : 'textures/SkyBox/TychoSkymapII.t3_08192x04096_80_pz.jpg',
-              negativeZ : 'textures/SkyBox/TychoSkymapII.t3_08192x04096_80_mz.jpg'
-            }
-        })
+                sources : {
+                  positiveX : 'textures/SkyBox/TychoSkymapII.t3_08192x04096_80_px.jpg',
+                  negativeX : 'textures/SkyBox/TychoSkymapII.t3_08192x04096_80_mx.jpg',
+                  positiveY : 'textures/SkyBox/TychoSkymapII.t3_08192x04096_80_py.jpg',
+                  negativeY : 'textures/SkyBox/TychoSkymapII.t3_08192x04096_80_my.jpg',
+                  positiveZ : 'textures/SkyBox/TychoSkymapII.t3_08192x04096_80_pz.jpg',
+                  negativeZ : 'textures/SkyBox/TychoSkymapII.t3_08192x04096_80_mz.jpg'
+                }
+            }),
+            useDefaultRenderLoop: false
         });
         this.layers = this.widget.centralBody.imageryLayers;
         this.baseLayerPicker = new Cesium.BaseLayerPicker('baseLayerContainer', this.layers, this.providerViewModels);
@@ -220,6 +221,7 @@ CesiumWorld.prototype.move = function(_direction, _factor) {
 CesiumWorld.prototype.init = function() {
    //console.log(this.geoCoder.viewModel.search);
    //console.log(this.geoCoder);
+    this.widget.resize();
 };
 
 CesiumWorld.prototype.flyTo = function(_location) {
@@ -261,5 +263,5 @@ CesiumWorld.prototype.changeLayer = function(_layer) {
 
 
 CesiumWorld.prototype.update = function() {
-
+    this.widget.render();
 };
