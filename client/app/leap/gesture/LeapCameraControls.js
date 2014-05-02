@@ -269,18 +269,28 @@ THREE.LeapCameraControls = function(camera, ellipsoid) {
       var zDelta = z - _zoomZLast;
 
       var lengthDelta = _this.zoomTransform(zDelta);
-      var absoluteLength = Math.abs(lengthDelta);
+//      var absoluteLength = Math.abs(lengthDelta);
 
         var cameraHeight = _this.ellipsoid.cartesianToCartographic(_this.camera.position).height;
         var moveRate = cameraHeight / 30;
-        console.log ('Move Rate: ' + moveRate);
+        console.log ('Camera Height: ' + cameraHeight);
         
-      if(lengthDelta > 0) {
-        _this.camera.moveForward(moveRate);
-      }
-      else {
-        _this.camera.moveBackward(moveRate);
-      }
+    if (lengthDelta > 0) {
+        if (cameraHeight < 50) {
+            //dont zoom in anymore
+        }
+        else {
+            _this.camera.moveForward(moveRate);
+        }
+    }
+    else {
+        if (cameraHeight > 50000000) {
+            //dont zoom out anymore
+        }
+        else {
+            _this.camera.moveBackward(moveRate);
+        }
+    }
       
       /*
       var t = new THREE.Vector3().subVectors(_this.camera.position, _this.target);
