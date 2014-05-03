@@ -19,6 +19,9 @@
 */
 html {
 	font-size: 100%;
+}
+
+body {
 	line-height: 1.5rem;
 }
 
@@ -55,10 +58,18 @@ html {
 	.m_Typography(@c_White, "clear_sansregular", 1.125rem);
 }
 
-.t_Body {
+.t_Body, .t_Input {
 	.m_Typography(@c_Black, "clear_sansregular", 1rem);
 }
 
 .t_Button {
 	.m_Typography(@c_White, "clear_sansbold", 1rem);
+}
+
+.t_InputDisabled {
+	.m_Typography(@c_GrayDis, "clear_sansregular", 1rem);
+}
+
+.t_FormLegend {
+	.m_Typography(@c_Black, "clear_sans_mediumregular", 1rem);
 }

@@ -3,3 +3,14 @@
 	-moz-border-radius: 		@_Radius;
 	border-radius: 					@_Radius;
 }
+
+.m_Shadow(@_X: 0px, @_Y: 0px, @_Blur: 0px, @_Spread: 0px, @_Color: #000000) {
+  -moz-box-shadow:    @_X @_Y @_Blur @_Spread @_Color;
+  -webkit-box-shadow: @_X @_Y @_Blur @_Spread @_Color;
+  box-shadow:         @_X @_Y @_Blur @_Spread @_Color;
+}
+
+.m_Transition(@_Property: all, @_Time: 1s, @_Type: ease) {
+	-webkit-transition: @_Property @_Time @_Type; /* For Safari 3.1 to 6.0 */
+	transition: @_Property @_Time @_Type;
+}
