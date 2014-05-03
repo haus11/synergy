@@ -28,12 +28,12 @@ THREE.LeapCameraControls = function(camera, ellipsoid) {
 
   // rotation
   this.rotateEnabled       = true;
-  this.rotateSpeed         = 0.5;
+  this.rotateSpeed         = 2.0;
   this.rotateHands         = 1;
   this.rotateFingers       = [2, 3]; 
   this.rotateRightHanded   = true;
   this.rotateHandPosition  = true;
-  this.rotateStabilized    = false;
+  this.rotateStabilized    = true;
   this.rotateMin           = 0;
   this.rotateMax           = Math.PI;
   
@@ -51,12 +51,12 @@ THREE.LeapCameraControls = function(camera, ellipsoid) {
   
   // pan
   this.panEnabled          = true;
-  this.panSpeed            = 2.5;
+  this.panSpeed            = 3.0;
   this.panHands            = 2;
   this.panFingers          = [6, 12];
   this.panRightHanded      = true;
   this.panHandPosition     = true;
-  this.panStabilized       = false;
+  this.panStabilized       = true;
   
   // internals
   var _rotateXLast         = null;
@@ -66,13 +66,16 @@ THREE.LeapCameraControls = function(camera, ellipsoid) {
   var _panYLast            = null;
   var _panZLast            = null;
   
-  // zoom stuff
+  // own zoom stuff
   this.zoomInMax           = 50;
   this.zoomOutMax          = 50000000;
   this.zoomMoveRateFactor  = 30;
 
-  // pan Stuff
+  // own pan stuff
   this.panSpeedInit        = this.panSpeed;
+  
+  // own rotate stuff   
+  this.rotateSpeedInit     = this.rotateSpeed;
   
   // helpers
   this.transformFactor = function(action) {
@@ -246,7 +249,41 @@ THREE.LeapCameraControls = function(camera, ellipsoid) {
 
       angleDelta = _this.rotateTransform(xDelta);
       var n = new THREE.Vector3(0, 1, 0).normalize();
-
+      
+        // rotation speed adjusting
+        var cameraHeight = _this.ellipsoid.cartesianToCartographic(_this.camera.position).height;
+        
+        if (cameraHeight < 300) {
+            _this.rotateSpeed = 0.00002;
+        }
+        else if (cameraHeight < 2000 && cameraHeight > 300) {
+            _this.rotateSpeed = 0.0001;
+        }
+        else if (cameraHeight < 10000 && cameraHeight > 2000) {
+            _this.rotateSpeed = 0.003;
+        }
+        else if (cameraHeight < 80000 && cameraHeight > 10000) {
+            _this.rotateSpeed = 0.008;
+        }
+        else if (cameraHeight < 300000 && cameraHeight > 80000) {
+            _this.rotateSpeed = 0.05;
+        }
+        else if (cameraHeight < 500000 && cameraHeight > 300000) {
+            _this.rotateSpeed = 0.1;
+        }
+        else if (cameraHeight > 500000 && cameraHeight < 1000000) {
+            _this.rotateSpeed = 0.25;
+        }
+        else if (cameraHeight > 1000000 && cameraHeight < 2000000) {
+            _this.rotateSpeed = 0.5;
+        }
+        else if (cameraHeight > 2000000 && cameraHeight < 5000000) {
+            _this.rotateSpeed = 1.0;
+        }
+        else {
+            _this.rotateSpeed = _this.rotateSpeedInit;
+        }
+      
       _this.camera.rotate(n, angleDelta);
 
       /*
@@ -336,7 +373,6 @@ THREE.LeapCameraControls = function(camera, ellipsoid) {
       //_this.target.sub(v);
 
         var cameraHeight = _this.ellipsoid.cartesianToCartographic(_this.camera.position).height;
-        console.log ('Height:' + cameraHeight);
         
         if (cameraHeight < 10000) {
             _this.panSpeed = 0.001;
@@ -353,8 +389,6 @@ THREE.LeapCameraControls = function(camera, ellipsoid) {
         else {
             _this.panSpeed = _this.panSpeedInit;
         }
-        
-        console.log ('Speed: ' + _this.panSpeed);
         
       var absoluteX = Math.abs(_this.panTransform(xDelta));
     

@@ -26,45 +26,22 @@
 
 
 #cesiumContainer {
-    position: absolute;
     top: 0;
-    left: 0;
+    right: 0;
     min-height: 100%;
     width: 100%;
     margin: 0;
     overflow: hidden;
     padding: 0;
     font-family: sans-serif;
-}
-
-#cesiumGeocoder {
     position: absolute;
-    top: 0;
-    left: 0;
-    width: 200px;
-    height: 200px;
-}
-
-#baseLayerContainer {
-    position: absolute;
-    top: 0;
-    right: 0;
-    width: 200px;
-    height: 200px;
 }
 
 body {
     padding: 0;
     margin: 0;
     overflow: hidden;
-    position: relative;
 }
-
-// Hiding the credits :)
-.cesium-widget-credits {
-    display: none!important;
-}
-
 
 // visualizer
 #app {
@@ -79,11 +56,14 @@ body {
 /*
  * Presentation layer
 */
+.p-ui-element {
+    background-color: fade(@c_SunrisePurple, 85%);
+    .m_BorderRadius(1px);
+}
 .p-welcomebox {
     width: 510px;
     padding: 15px;
-    background-color: fade(@c_SunrisePurple, 85%);
-    .m_BorderRadius(1px);
+    .p-ui-element();
 }
 .p-title {
     .t_H1();
@@ -108,6 +88,81 @@ body {
 .p-btn-erro {
     .p-btn();
     background-color: @c_Error;
+}
+
+.p-search, .p-layer-chooser {
+    .p-ui-element();
+    padding: 10px;
+    .t_Body();
+}
+
+.p-topography {
+    .p-ui-element();
+    padding: 0px 10px 10px 10px;
+    .t_Body();
+    .m_Shadow(0px, 3px, 0px, 0px, @c_Black);
+}
+.p-btn-topography {
+    .m_Transition(all, 0.3s, ease);
+}
+.topography-inactive:hover {
+    background-color: @c_Success;
+}
+.topography-active:hover {
+    background-color: @c_Error;
+}
+.p-search {
+    z-index: 3;
+}
+.p-layer-chooser {
+    z-index: 1;
+    color: @c_White;
+}
+.cesium-baseLayerPicker-item:first-child {
+    &:before {
+        content: " ";
+        text-align: center;
+        float: none;
+        width: 100%;
+        display: block;
+    }
+
+}
+.cesium-baseLayerPicker-item {
+    left: 0;
+    width: 100%;
+    float: none;
+    margin-bottom: 10px;
+    padding: 10px;
+    .m_Transition(all, 0.3s, ease);
+    &:hover {
+        cursor: pointer;
+        background-color: @c_Success;
+        &:before {
+            background-color: green;
+        }
+    }
+}
+.cesium-baseLayerPicker-item:after {
+      clear: both;
+      content: '.';
+      display: block;
+      visibility: hidden;
+      height: 0;
+}
+.cesium-baseLayerPicker-itemIcon {
+    display: block;
+    float: left;
+}
+
+.cesium-baseLayerPicker-itemLabel {
+    float: none;
+}
+
+.cesium-geocoder-input {
+    padding: 10px 5px 10px 40px;
+    width: 100%;
+    .t_Input();
 }
 /*
  * Layout layer
@@ -134,4 +189,92 @@ body {
 }
 .l-btn:last-child {
     margin-right: 0px;
+}
+
+.l-navigation {
+    position: absolute;
+    right: 0;
+    width: 300px;
+}
+.l-layer-chooser {
+}
+.l-search {
+    margin-top: 86px;
+}
+
+.l-topgraphy {
+    text-align: center;
+}
+
+#cesiumGeocoder {
+    top: 0;
+    right: 0;
+}
+
+#baseLayerContainer {
+    text-align: right;
+    margin-top: 0px;
+    margin-bottom: 25px;
+    button {
+        display: block;
+        margin-left: auto;
+        margin-right: auto;
+        width: 78px;
+        margin-bottom: 50px;
+        img {
+            display: block;
+            margin-right: 0;
+
+        }
+    }
+    &:before {
+        display: block;
+        width: 100%;
+        text-align: center;
+        content: "Current layer: ";
+        margin-bottom: 5px;
+    }
+    &:after {
+        display: block;
+        width: 100%;
+        text-align: center;
+        content: "Select layer: ";
+        margin-bottom: 5px;
+        position: absolute;
+        margin-top: -300px;
+        margin-left: -5px;
+    }
+}
+
+.cesium-geocoder-searchButton {
+    position: absolute;
+    margin-top: -37px;
+    margin-left: 2px;
+}
+
+#menu-toggler {
+    width: 82px;
+    height: 82px;
+    .p-ui-element();
+    padding: 20px 10px;
+    .m_Transition(all, 0.3s, ease);
+    .t_Body();
+    .m_Shadow(0px, 3px, 0px, 0px, @c_Black);
+    &:hover {
+        cursor: pointer;
+        background-color: @c_SunriseDarkPink;
+    }
+    position: absolute;
+    right: 0;
+}
+
+.menu-stripe {
+    background-color: @c_White;
+    display: block;
+    height: 5px;
+    width: 80%;
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: 10px;
+    .m_BorderRadius(2px);
 }
