@@ -5,17 +5,20 @@
  * 
  */
 
-THREE.LeapCameraControls = function(camera) {
+THREE.LeapCameraControls = function(camera, ellipsoid) {
   var _this = this;
 
-  _this.camera = camera;
+  _this.camera    = camera;
+  _this.ellipsoid = ellipsoid;
 
   // api
   this.enabled      = true;
   this.target       = new THREE.Vector3(0, 0, 0);
   this.step         = (camera.position.z == 0 ? Math.pow(10, (Math.log(camera.frustum.near) + Math.log(camera.frustum.far))/Math.log(10))/10.0 : camera.position.z);
   this.fingerFactor = 2;
+
   this.startZ       = _this.camera.position.z;
+  this.mode         = 'standard';
 
   // `...Hands`       : integer or range given as an array of length 2
   // `...Fingers`     : integer or range given as an array of length 2
@@ -25,7 +28,7 @@ THREE.LeapCameraControls = function(camera) {
 
   // rotation
   this.rotateEnabled       = true;
-  this.rotateSpeed         = 1.0;
+  this.rotateSpeed         = 0.5;
   this.rotateHands         = 1;
   this.rotateFingers       = [2, 3]; 
   this.rotateRightHanded   = true;
@@ -36,18 +39,19 @@ THREE.LeapCameraControls = function(camera) {
   
   // zoom
   this.zoomEnabled         = true;
-  this.zoomSpeed           = 5.0;
+  this.zoomSpeed           = 4.0;
   this.zoomHands           = 1;
   this.zoomFingers         = [4, 5];
   this.zoomRightHanded     = true;
   this.zoomHandPosition    = true;
-  this.zoomStabilized      = false;
+  this.zoomStabilized      = true;
   this.zoomMin             = _this.camera.frustum.near;
-  this.zoomMax             = _this.camera.frustum.far;
+  this.zoomMax             = _this.camera.maximumZoomFactor;
+  //this.zoomMax             = _this.camera.frustum.far;
   
   // pan
   this.panEnabled          = true;
-  this.panSpeed            = 1.0;
+  this.panSpeed            = 2.5;
   this.panHands            = 2;
   this.panFingers          = [6, 12];
   this.panRightHanded      = true;
@@ -61,7 +65,15 @@ THREE.LeapCameraControls = function(camera) {
   var _panXLast            = null;
   var _panYLast            = null;
   var _panZLast            = null;
+  
+  // zoom stuff
+  this.zoomInMax           = 50;
+  this.zoomOutMax          = 50000000;
+  this.zoomMoveRateFactor  = 30;
 
+  // pan Stuff
+  this.panSpeedInit        = this.panSpeed;
+  
   // helpers
   this.transformFactor = function(action) {
     switch(action) {
@@ -143,7 +155,7 @@ THREE.LeapCameraControls = function(camera) {
 
   this.hand = function(frame, action) {
     var hds = frame.hands;
-
+   
     if (hds.length > 0) {
       if (hds.length == 1) {
         return hds[0];
@@ -156,6 +168,7 @@ THREE.LeapCameraControls = function(camera) {
           lh = hds[1];
           rh = hds[0];
         }
+
         switch(action) {
           case 'rotate':
             if (_this.rotateRightHanded) {
@@ -255,35 +268,34 @@ THREE.LeapCameraControls = function(camera) {
   };
 
   this.zoomCamera = function(frame) {
-
+            
     if (_this.zoomEnabled && _this.applyGesture(frame, 'zoom')) {
       var z = _this.position(frame, 'zoom')[2];
       if (!_zoomZLast) _zoomZLast = z;
       var zDelta = z - _zoomZLast;
 
-      var speedFactor = 5 / _this.startZ;
-      if (_this.camera.position.z > _this.startZ) {
-         _this.zoomSpeed = 5;
-      }
-      else if (_this.camera.position.z < (_this.startZ / 2)) {
-         _this.zoomSpeed = Math.sqrt((speedFactor * _this.camera.position.z / 2));
-      }
-      
-      else {
-         _this.zoomSpeed = speedFactor * _this.camera.position.z;
-      }
+    var lengthDelta = _this.zoomTransform(zDelta);
+//      var absoluteLength = Math.abs(lengthDelta);
 
-
-      var lengthDelta = _this.zoomTransform(zDelta);
-      var absoluteLength = Math.abs(lengthDelta);
-
-
-      if(lengthDelta > 0) {
-        _this.camera.zoomIn(absoluteLength);
-      }
-      else {
-        _this.camera.zoomOut(absoluteLength);
-      }
+    var cameraHeight = _this.ellipsoid.cartesianToCartographic(_this.camera.position).height;
+    var moveRate = cameraHeight / _this.zoomMoveRateFactor;
+        
+    if (lengthDelta > 0) {
+        if (cameraHeight < _this.zoomInMax) {
+            //dont zoom in anymore
+        }
+        else {
+            _this.camera.moveForward(moveRate);
+        }
+    }
+    else {
+        if (cameraHeight > _this.zoomOutMax) {
+            //dont zoom out anymore
+        }
+        else {
+            _this.camera.moveBackward(moveRate);
+        }
+    }
       
       /*
       var t = new THREE.Vector3().subVectors(_this.camera.position, _this.target);
@@ -294,13 +306,12 @@ THREE.LeapCameraControls = function(camera) {
         _this.camera.position.sub(t);        
       };
       */
-
-      _zoomZLast   = z; 
-      _rotateXLast = null;
-      _rotateYLast = null;
-      _panXLast    = null;
-      _panYLast    = null;
-      _panZLast    = null;
+      _zoomZLast        = z; 
+      _rotateXLast      = null;
+      _rotateYLast      = null;
+      _panXLast         = null;
+      _panYLast         = null;
+      _panZLast         = null;
     } else {
       _zoomZLast = null; 
     };
@@ -318,11 +329,52 @@ THREE.LeapCameraControls = function(camera) {
       var yDelta = y - _panYLast;
       var zDelta = z - _panZLast;
 
-      //var v = _this.camera.localToWorld(new THREE.Vector3(_this.panTransform(xDelta), _this.panTransform(yDelta), _this.panTransform(zDelta)));
-      v.sub(_this.camera.position);
+      //var v = new THREE.Vector3(_this.panTransform(xDelta), _this.panTransform(yDelta), _this.panTransform(zDelta))
+      //v.sub(_this.camera.position);
 
-      _this.camera.position.sub(v);
-      _this.target.sub(v);
+      //_this.camera.position.sub(v);
+      //_this.target.sub(v);
+
+        var cameraHeight = _this.ellipsoid.cartesianToCartographic(_this.camera.position).height;
+        console.log ('Height:' + cameraHeight);
+        
+        if (cameraHeight < 10000) {
+            _this.panSpeed = 0.001;
+        }
+        if (cameraHeight < 50000 && cameraHeight > 10000) {
+            _this.panSpeed = 0.01;
+        }
+        else if (cameraHeight < 500000 && cameraHeight > 50000) {
+            _this.panSpeed = 0.1;
+        }
+        else if (cameraHeight > 500001 && cameraHeight < 1500000) {
+            _this.panSpeed = 0.8;
+        }
+        else {
+            _this.panSpeed = _this.panSpeedInit;
+        }
+        
+        console.log ('Speed: ' + _this.panSpeed);
+        
+      var absoluteX = Math.abs(_this.panTransform(xDelta));
+    
+      if(xDelta > 0) {
+        _this.camera.moveLeft(absoluteX);
+      }
+      else {
+        _this.camera.moveRight(absoluteX);
+      }
+
+
+      var absoluteY = Math.abs(_this.panTransform(yDelta));
+
+      if(yDelta > 0) {
+        _this.camera.moveDown(absoluteY);
+      }
+      else {
+        _this.camera.moveUp(absoluteY);
+      }
+
 
       _panXLast    = x;
       _panYLast    = y;
@@ -337,12 +389,66 @@ THREE.LeapCameraControls = function(camera) {
     };
   };
 
+  this.airplaneCamera = function(frame) {
+    var data = frame.data;
+    if (frame.valid && data.hands.length === 1) {
+      var fingers = data.pointables;
+      if (fingers.length > 1) {
+        data = data.hands[0];
+        if (data.timeVisible > 0.75) {
+          var cesiumLeap = this,
+          camera = cesiumLeap.camera,
+          movement = {},
+          cameraHeight = cesiumLeap.ellipsoid.cartesianToCartographic(camera.position).height,
+          moveRate = cameraHeight / 100.0;
+
+          // pan - x,y
+          movement.x = data.palmPosition[0];
+          movement.y = data.palmPosition[2];
+
+          //zoom - z // height above leap
+          movement.z = data.palmPosition[1];
+
+          //pitch - pitch
+          var normal = data.palmNormal;
+          movement.pitch = -1 * normal[2]; // leap motion has it that negative is sloping upwards, flipping it for google earth
+          //Math.atan2(normal.z, normal.y) * 180/math.pi + 180;
+          movement.rotate = data.direction[0];
+          //yaw - yaw
+          movement.yaw = -1 * normal[0]; // roll?
+          // LeapMotion flips its roll angles as well
+
+          // this 'mid' var seems to be a natural mid point in the 'z'
+          // (or vertcal distance above device)
+          // direction that is used for whether you are closer to the device
+          // or away from it.
+          var mid = 175;
+          var normalized = (movement.z - mid) / -100;
+
+          camera.moveForward(normalized * moveRate);
+          camera.moveRight(movement.x * moveRate / 100);
+          camera.moveDown(movement.y * moveRate / 100);
+
+          camera.lookUp(movement.pitch / 100);
+
+          camera.twistRight(movement.yaw / 100);
+          camera.lookRight(movement.rotate / 100);
+        }
+      }
+    }
+  };
+
   this.update = function(frame) {
 
     if (_this.enabled) {
-      _this.rotateCamera(frame);
-      _this.zoomCamera(frame);
-      _this.panCamera(frame);
+      if (_this.mode === 'standard') {
+        _this.rotateCamera(frame);
+        _this.zoomCamera(frame);
+        _this.panCamera(frame);
+      }
+      else if (_this.mode === 'flight') {
+        _this.airplaneCamera(frame);
+      }
     };
   };
 };

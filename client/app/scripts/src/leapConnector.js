@@ -33,7 +33,7 @@ function LeapConnector() {
 
 
     this.fingers = {};
-	this.spheres = {};
+    this.spheres = {};
 }
 
 /**

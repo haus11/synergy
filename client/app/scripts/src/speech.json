@@ -14,7 +14,55 @@
             "Ich kann die Oberfläche #REPLACE# nicht benutzen."
           ]
         }
-      },  
+      },
+      {
+        "emit": "flightMode",
+        "detect": "Flugmodus",
+        "answers": {
+          "success": [
+            "Ich habe den Flugmodus aktiviert."
+          ],
+          "fail": [
+            "Ich konnte den Flugmodus nicht aktivieren."
+          ]
+        }
+      },
+      {
+        "emit": "standardMode",
+        "detect": "Standardmodus",
+        "answers": {
+          "success": [
+            "Ich habe den Standardmodus aktiviert."
+          ],
+          "fail": [
+            "Ich konnte den Standardmodus nicht aktivieren."
+          ]
+        }
+      },
+      {
+        "emit": "thanks",
+        "detect": "Danke",
+        "answers": {
+          "success": [
+            "Gerne doch.",
+            "Kein Problem.",
+            "Ich freue mich dir geholfen zu haben.",
+            "Das habe ich doch gern getan."
+          ]
+        }
+      },
+      {
+        "emit": "setTerrain",
+        "detect": "Relief",
+        "answers": {
+          "success": [
+            "Ich habe das Relief #REPLACE#."
+          ],
+          "fail": [
+            "Ich kann das Relief nicht einschalten."
+          ]
+        }
+      },
       {
         "emit": "navigateTo",
         "detect": "suche",
