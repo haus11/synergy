@@ -11,7 +11,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
 
         <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
-
+        <link rel="stylesheet" href="styles/css/reset.css">
         <link rel="stylesheet" href="bower_components/normalize-css/normalize.css">
         <link rel="stylesheet" href="styles/css/main.css">
         <link rel="stylesheet" href="scripts/src/cesium/Build/Cesium/Widgets/CesiumWidget/CesiumWidget.css">
@@ -29,8 +29,24 @@
         <!--<div id="webglContainer" class="webgl-container"></div>-->
 
         <div id="cesiumContainer" class="fullSize"></div>
-        <div id="cesiumGeocoder"></div>
-        <div id="baseLayerContainer"></div>
+        <nav class="l-navigation">
+            <div role="menu-toogler" id="menu-toggler">
+                <div class="menu-stripe"></div>
+                <div class="menu-stripe"></div>
+                <div class="menu-stripe"></div>
+            </div>
+            <section role="menu-elements" id="menu-elements">
+                <div id="search" role="search" class="p-search l-search">
+                    <div id="cesiumGeocoder"></div>
+                </div>
+                <div role="layer-chooser" class="p-layer-chooser l-layer-chooser" id="layer-chooser">
+                    <div id="baseLayerContainer"></div>
+                </div>
+                <div role="topography" class="p-topography l-topgraphy">
+                    <button class="l-btn p-btn-erro l-btn-topography p-btn-topography topography-inactive" id="switch-topography"></button>
+                </div>
+            </section>
+        </nav>
         <div id="welcomebox" class="p-welcomebox l-welcomebox">
             <h2 class="p-title l-title">SYNERGY</h2>
             <p class="l-paragraph p-paragraph">
@@ -38,7 +54,7 @@
             </p>
             <div class="l-welcome-btn">
                 <button class="l-btn p-btn-succ">Tutorial</button>
-                <button class="l-btn p-btn-erro">Close</button>
+                <button class="l-btn p-btn-erro" id="welcomebox-close">Close</button>
             </div>
         </div>
 
