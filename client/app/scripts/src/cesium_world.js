@@ -1,5 +1,6 @@
 /* globals Cesium, CesiumWorld, window */
-
+var events = require('events');
+var util   = require('util');
 /**
 * Export for require statemant
 */
@@ -10,7 +11,7 @@ module.exports = CesiumWorld;
 * Constructor
 */
 function CesiumWorld(_speechRecognition, _speechSynthesis) {
-
+        
         this.providerViewModels = [];
         this.providerViewModels.push(new Cesium.ImageryProviderViewModel({
              name : 'OpenStreetMap',
@@ -145,6 +146,8 @@ function CesiumWorld(_speechRecognition, _speechSynthesis) {
         this.init();
 }
 
+util.inherits(CesiumWorld, events.EventEmitter);
+
 CesiumWorld.prototype.setTerrain = function(_state)
 {
     if(_state)
@@ -242,6 +245,7 @@ CesiumWorld.prototype.flyTo = function(_location) {
         else
         {
             _this.speechSynthesis.answer('navigateTo', true, _location);
+            _this.emit('flyToFlag');
         }
 
     }, 1000);

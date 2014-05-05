@@ -19,7 +19,7 @@ THREE.LeapCameraControls = function(camera, ellipsoid) {
 
   this.startZ       = _this.camera.position.z;
   this.mode         = 'standard';
-
+  this.flyToFlag    = false;
   // `...Hands`       : integer or range given as an array of length 2
   // `...Fingers`     : integer or range given as an array of length 2
   // `...RightHanded` : boolean indicating whether to use left or right hand for controlling (if number of hands > 1)
@@ -76,6 +76,9 @@ THREE.LeapCameraControls = function(camera, ellipsoid) {
   
   // own rotate stuff   
   this.rotateSpeedInit     = this.rotateSpeed;
+  
+  // camera height before panning
+  this.cameraHeightZoom    = null;
   
   // helpers
   this.transformFactor = function(action) {
@@ -226,32 +229,57 @@ THREE.LeapCameraControls = function(camera, ellipsoid) {
   // methods
   this.rotateCamera = function(frame) {
     if (_this.rotateEnabled && _this.applyGesture(frame, 'rotate')) {
-      // rotate around axis in xy-plane (in target coordinate system) which is orthogonal to camera vector
-      var y = _this.position(frame, 'rotate')[1];
-      if (!_rotateYLast) _rotateYLast = y;
-      var yDelta = y - _rotateYLast;
+          
+//        var lastY = _this.camera.position.y;
+//        var lastX = _this.camera.position.x;
+        
+        
+        
+        // rotate around axis in xy-plane (in target coordinate system) which is orthogonal to camera vector
+        
+        if(_this.flyToFlag == true) {  
+            var y = _this.position(frame, 'rotate')[0];
+        }
+        else {
+            var y = _this.position(frame, 'rotate')[1];
+        }
+        if (!_rotateYLast) _rotateYLast = y;
+        var yDelta = y - _rotateYLast;
 
+        // y auf links rechts vertauschen
+//        if (flyToFlag == true) {
+//            var y = _this.position(frame, 'rotate')[1];
+//            if (!_rotateYLast) _rotateYLast = X;
+//            var yDelta = y - _rotateXLast;
+//        }
+        
+        var t = new THREE.Vector3().subVectors(_this.camera.position, _this.target); // translate
+        angleDelta = _this.rotateTransform(yDelta);
+        newAngle = t.angleTo(new THREE.Vector3(0, 1, 0)) + angleDelta;
+        if (_this.rotateMin < newAngle && newAngle < _this.rotateMax) {
+          var n = new THREE.Vector3(t.z, 0, -t.x).normalize();
+          var matrixX = new THREE.Matrix4().makeRotationAxis(n, angleDelta);
+          //_this.camera.position = t.applyMatrix4(matrixX).add(_this.target); // rotate and translate back
+          _this.camera.rotate(n, -angleDelta);   
+        };
 
-      var t = new THREE.Vector3().subVectors(_this.camera.position, _this.target); // translate
-      angleDelta = _this.rotateTransform(yDelta);
-      newAngle = t.angleTo(new THREE.Vector3(0, 1, 0)) + angleDelta;
-      if (_this.rotateMin < newAngle && newAngle < _this.rotateMax) {
-        var n = new THREE.Vector3(t.z, 0, -t.x).normalize();
-        var matrixX = new THREE.Matrix4().makeRotationAxis(n, angleDelta);
-        //_this.camera.position = t.applyMatrix4(matrixX).add(_this.target); // rotate and translate back
-        _this.camera.rotate(n, -angleDelta);   
-      };
-
-      // rotate around y-axis translated by target vector
-      var x = _this.position(frame, 'rotate')[0];
-      if (!_rotateXLast) _rotateXLast = x;
-      var xDelta = x - _rotateXLast;
-
-      angleDelta = _this.rotateTransform(xDelta);
-      var n = new THREE.Vector3(0, 1, 0).normalize();
+        // rotate around y-axis translated by target vector
+        if(_this.flyToFlag == true) {  
+            var x = _this.position(frame, 'rotate')[1];
+        }
+        else {
+          var x = _this.position(frame, 'rotate')[0];
+        }
       
+        if (!_rotateXLast) _rotateXLast = x;
+        var xDelta = x - _rotateXLast;
+
+        angleDelta = _this.rotateTransform(xDelta);
+        var n = new THREE.Vector3(0, 1, 0).normalize();
+
         // rotation speed adjusting
         var cameraHeight = _this.ellipsoid.cartesianToCartographic(_this.camera.position).height;
+//        console.log (_this.camera.position);
         
         if (cameraHeight < 300) {
             _this.rotateSpeed = 0.00002;
@@ -316,7 +344,7 @@ THREE.LeapCameraControls = function(camera, ellipsoid) {
 
     var cameraHeight = _this.ellipsoid.cartesianToCartographic(_this.camera.position).height;
     var moveRate = cameraHeight / _this.zoomMoveRateFactor;
-        
+
     if (lengthDelta > 0) {
         if (cameraHeight < _this.zoomInMax) {
             //dont zoom in anymore
@@ -333,7 +361,7 @@ THREE.LeapCameraControls = function(camera, ellipsoid) {
             _this.camera.moveBackward(moveRate);
         }
     }
-      
+      _this.cameraHeightZoom = cameraHeight;
       /*
       var t = new THREE.Vector3().subVectors(_this.camera.position, _this.target);
       var lengthDelta = _this.zoomTransform(zDelta);

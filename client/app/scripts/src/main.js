@@ -8,7 +8,7 @@ var SpeechRecognition = require('./speechRecognition.js');
 var SpeechSynthesis   = require('./speechSynthesis.js');
 var Ui                = require('./Ui.js');
 
-console.log(Ui);
+//console.log(Ui);
 
 // Create a basic leap connection
 var leapConnection    = new LeapConnector();
@@ -34,6 +34,11 @@ speechRecognition.on('standartMode', function() {
 	cameraControls.mode = 'standard';
 
 	speechSynthesis.answer('standartMode', true);
+});
+
+cesiumWorld.on('flyToFlag', function() {
+        console.log('Aufruf');
+	cameraControls.flyToFlag = true;
 });
 
 // Ui stuff
