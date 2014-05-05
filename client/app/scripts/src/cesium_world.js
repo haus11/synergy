@@ -1,6 +1,11 @@
+
 /* globals Cesium, CesiumWorld, window */
 var events = require('events');
 var util   = require('util');
+
+/* globals Cesium, CesiumWorld, window, $ */
+
+
 /**
 * Export for require statemant
 */
@@ -81,6 +86,8 @@ function CesiumWorld(_speechRecognition, _speechSynthesis) {
 
         this.speechRecognition = _speechRecognition;
         this.speechSynthesis = _speechSynthesis;
+        
+        this.lastLocation = '';
 
         this.speechRecognition.on('navigateTo', function(event)
         {
@@ -142,6 +149,12 @@ function CesiumWorld(_speechRecognition, _speechSynthesis) {
             }
             
         });
+        
+        this.speechRecognition.on('informationRequest', function(event)
+        {
+            console.log(event);
+            _this.readAbstractFromWikipedia();
+        });
 
         this.init();
 }
@@ -153,12 +166,18 @@ CesiumWorld.prototype.setTerrain = function(_state)
     if(_state)
     {
         this.centralBody.terrainProvider = this.cesiumTerrainProviderMeshes;
-        this.speechSynthesis.answer('setTerrain', true, 'eingeschaltet');
+        this.speechSynthesis.answer('setTerrain', {
+            'state': true, 
+            'replace': 'eingeschaltet'
+        });
     }
     else
     {
         this.centralBody.terrainProvider = this.defaultTerrainProvider;
-        this.speechSynthesis.answer('setTerrain', true, 'ausgeschaltet');
+        this.speechSynthesis.answer('setTerrain', {
+            'state': true, 
+            'replace': 'ausgeschaltet'
+        });
     }  
 };
 
@@ -184,37 +203,37 @@ CesiumWorld.prototype.move = function(_direction, _factor) {
         case 'forward':
         {
             this.widget.scene.camera.moveForward(moveRate);
-            this.speechSynthesis.answer('moveForward', true);
+            this.speechSynthesis.answer('moveForward', {'state': true});
             break;
         }
         case 'backward':
         {
             this.widget.scene.camera.moveBackward(moveRate);
-            this.speechSynthesis.answer('moveBackward', true);
+            this.speechSynthesis.answer('moveBackward', {'state': true});
             break;
         }
         case 'up':
         {
             this.widget.scene.camera.moveUp(moveRate);
-            this.speechSynthesis.answer('moveUp', true);
+            this.speechSynthesis.answer('moveUp', {'state': true});
             break;
         }
         case 'down':
         {
             this.widget.scene.camera.moveDown(moveRate);
-            this.speechSynthesis.answer('moveDown', true);
+            this.speechSynthesis.answer('moveDown', {'state': true});
             break;
         }
         case 'left':
         {
             this.widget.scene.camera.moveLeft(moveRate);
-            this.speechSynthesis.answer('moveLeft', true);
+            this.speechSynthesis.answer('moveLeft', {'state': true});
             break;
         }
         case 'right':
         {
             this.widget.scene.camera.moveRight(moveRate);
-            this.speechSynthesis.answer('moveRight', true);
+            this.speechSynthesis.answer('moveRight', {'state': true});
             break;
         }
     }
@@ -240,15 +259,83 @@ CesiumWorld.prototype.flyTo = function(_location) {
 
         if(searchResult.indexOf('(not found)') !== -1) {
 
-            _this.speechSynthesis.answer('navigateTo', false, _location);
+            _this.speechSynthesis.answer('navigateTo', {
+                'state' : false,
+                'replace' : _location
+            });
         }
         else
         {
             _this.speechSynthesis.answer('navigateTo', true, _location);
             _this.emit('flyToFlag');
+
+            _this.speechSynthesis.answer('navigateTo', {
+                'state' : true,
+                'replace' : _location
+            });
+            
+            _this.lastLocation = _location;
+
         }
 
     }, 1000);
+};
+
+CesiumWorld.prototype.readAbstractFromWikipedia = function()
+{
+    var _this = this;
+    
+    $.ajax({
+      dataType: "jsonp",
+      url: "https://de.wikipedia.org/w/api.php?action=query&prop=extracts&format=json&exintro=&titles=" + _this.lastLocation,
+      success: function(data){
+          
+          var first;
+          var splitted;
+            for (var property in data.query.pages) {
+                if (data.query.pages.hasOwnProperty(property)) {
+                    first = data.query.pages[property];
+                    
+                    
+                    //_this.speechSynthesis.speak(first.extract.replace(/<\/?[^>]+(>|$)/g, "").split(".")[0]);
+                    
+                    splitted = first.extract.replace(/<\/?[^>]+(>|$)/g, "");//.split(".");
+                    console.log(splitted);
+                    
+                    break;
+                }
+            }
+            
+            _this.speechSynthesis.speak(splitted);
+    }});
+};
+
+CesiumWorld.prototype.getInformationFromWikipedia = function(_resource)
+{
+    var resource =  _resource.charAt(0).toUpperCase() + _resource.slice(1);
+    var _this = this;
+    
+    $.ajax({
+      dataType: "json",
+      crossDomain : true,
+      url: "http://dbpedia.org/data/" + resource + ".json",
+      success: function(data){
+          
+          console.log(data);
+          var abstractList = data['http://dbpedia.org/resource/' + resource]['http://dbpedia.org/ontology/abstract'];
+          var abstract = '';
+          
+          for(var i = 0; i < abstractList.length; ++i)
+          {
+              if(abstractList[i].lang === 'de')
+              {
+                  abstract = abstractList[i].value.substring(0, 100);
+                  break;
+              }
+          }
+          
+          _this.speechSynthesis.speak(abstract);
+    }});
 };
 
 CesiumWorld.prototype.changeLayer = function(_layer) {
@@ -257,12 +344,17 @@ CesiumWorld.prototype.changeLayer = function(_layer) {
         if(this.providerViewModels[i].name === _layer)
         {
             this.baseLayerPicker.viewModel.selectedItem = this.providerViewModels[i];
-            this.speechSynthesis.answer('selectLayer', true, this.providerViewModels[i].name);
+            this.speechSynthesis.answer('selectLayer', {
+                'state': true, 
+                'replace': this.providerViewModels[i].name
+            });
             return;
         }
     }
 
-    this.speechSynthesis.answer('selectLayer', false, _layer);
+    this.speechSynthesis.answer('selectLayer', {
+        'state': false, 
+        'replace':_layer});
 };
 
 

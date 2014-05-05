@@ -28,8 +28,29 @@
         }
       },
       {
+        "emit": "informationRequest",
+        "detect": "Informationen",
+        "answers": {
+          "success": [],
+          "fail": []
+        }
+      },
+      {
+        "emit": "test",
+        "detect": "test",
+        "answers": {
+          "success": [
+            "Dein Mikrophon funktioniert super.",
+            "Ich höre dich."
+          ],
+          "fail": [
+            "Ich konnte den Flugmodus nicht aktivieren."
+          ]
+        }
+      },
+      {
         "emit": "standardMode",
-        "detect": "Standardmodus",
+        "detect": "Standard modus",
         "answers": {
           "success": [
             "Ich habe den Standardmodus aktiviert."
