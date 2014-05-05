@@ -44,16 +44,110 @@ SpeechSynthesis.prototype.init = function() {
         this.message.text = '';
         this.message.lang = this.language;
         
-        //var _this = this;
+        this.overlengthArray = [];
+        this.overlengthCount = 0;
     }
 };
 
-SpeechSynthesis.prototype.speak = function(_text) {
+SpeechSynthesis.prototype.strSplitOnLength = function(str, maxWidth) {
+    var resultArr = [];
+    var parts = str.split(/([\s\n\r]+)/);
+    var count = parts.length;
+    var width = 0;
+    var start = 0;
+    for (var i=0; i<count; ++i) {
+        width += parts[i].length;
+        if (width > maxWidth) {
+            resultArr.push( parts.slice(start, i).join('') );
+            start = i;
+            width = 0;
+        }
+    }
+    return resultArr;
+};
+
+
+SpeechSynthesis.prototype.onEnd = function()
+{
+    console.log(this);
+    
+    if((this.overlengthArray.length) === this.overlengthCount)
+    {
+        this.message.onend = undefined;
+        this.overlengthCount = 0;
+        this.overlengthArray = [];
+        
+        return;
+    }
+    else
+    {
+        console.log(this.overlengthCount);
+        ++this.overlengthCount;
+        this.message.text = this.overlengthArray[this.overlengthCount];
+        window.speechSynthesis.speak(this.message);
+    }
+};
+
+SpeechSynthesis.prototype.speak = function(_text, _options) {
+    
+    window.speechSynthesis.cancel();
+    
+    if(_text.length > 200)
+    {
+        this.overlengthArray = this.strSplitOnLength(_text, 200);
+        console.log(this.overlengthArray);
+        
+        this.message.text = this.overlengthArray[0];
+        
+        var _this = this;
+        
+        this.message.onend = function(event){_this.onEnd(event);};
+        
+        window.speechSynthesis.speak(this.message);
+        
+        return;
+    }
+    
     this.message.text = _text;
+    
+    this.message.onend = undefined;
+    this.message.onstart = undefined;
+    this.message.onpause = undefined;
+    this.message.onresume = undefined;
+    this.message.onerror = undefined;
+    
+    if(typeof _options !== 'undefined')
+    {
+        if(typeof _options.onEnd === "function")
+        {
+            this.message.onend = _options.onEnd;
+        }
+
+        if(typeof _options.onStart === "function")
+        {
+            this.message.onstart = _options.onStart;
+        }
+
+        if(typeof _options.onPause === "function")
+        {
+            this.message.onpause = _options.onPause;
+        }
+
+        if(typeof _options.onResume === "function")
+        {
+            this.message.onresume = _options.onResume;
+        }
+
+        if(typeof _options.onError === "function")
+        {
+            this.message.onerror = _options.onerror;
+        }
+    }
+
     window.speechSynthesis.speak(this.message);
 };
 
-SpeechSynthesis.prototype.answer = function(_emit, _state, _replace) {
+SpeechSynthesis.prototype.answer = function(_emit, _options) {
     
     for (var j = 0; j < this.speechList.length; ++j)
     {
@@ -65,13 +159,21 @@ SpeechSynthesis.prototype.answer = function(_emit, _state, _replace) {
 
                 if (currentDetectionItem.emit === _emit)
                 {
-                    if(_state)
+                    var options = {
+                        'onEnd': _options.onEnd,
+                        'onError': _options.onError,
+                        'onStart': _options.onStart,
+                        'onPause': _options.onPause,
+                        'onResume': _options.onResume
+                    };
+                    
+                    if(_options.state)
                     {
-                         this.speak(currentDetectionItem.answers.success[Math.floor((Math.random() * currentDetectionItem.answers.success.length) + 0)].replace('#REPLACE#', _replace));
+                         this.speak(currentDetectionItem.answers.success[Math.floor((Math.random() * currentDetectionItem.answers.success.length) + 0)].replace('#REPLACE#', _options.replace), options);
                     }
                     else
                     {
-                        this.speak(currentDetectionItem.answers.fail[Math.floor((Math.random() * currentDetectionItem.answers.fail.length) + 0)].replace('#REPLACE#', _replace));
+                        this.speak(currentDetectionItem.answers.fail[Math.floor((Math.random() * currentDetectionItem.answers.fail.length) + 0)].replace('#REPLACE#', _options.replace), options);
                     }
                 }
             }

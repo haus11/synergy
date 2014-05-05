@@ -129,8 +129,6 @@ SpeechRecognition.prototype.onEnd = function() {
 
 SpeechRecognition.prototype.onError = function(event) {
     
-    
-    
     if (event.error === 'no-speech') {
         console.log('Error: no speech');
     }
