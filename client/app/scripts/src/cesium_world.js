@@ -1,5 +1,8 @@
 /* globals Cesium, CesiumWorld, window, $, navigator */
 
+var events = require('events');
+var util   = require('util');
+
 /**
 * Export for require statemant
 */
@@ -10,7 +13,7 @@ module.exports = CesiumWorld;
 * Constructor
 */
 function CesiumWorld(_speechRecognition, _speechSynthesis) {
-
+        
         this.providerViewModels = [];
         this.providerViewModels.push(new Cesium.ImageryProviderViewModel({
              name : 'OpenStreetMap',
@@ -153,6 +156,8 @@ function CesiumWorld(_speechRecognition, _speechSynthesis) {
         this.init();
 }
 
+util.inherits(CesiumWorld, events.EventEmitter);
+
 CesiumWorld.prototype.setTerrain = function(_state)
 {
     if(_state)
@@ -268,6 +273,7 @@ CesiumWorld.prototype.flyToMyLocation = function()
                 destination : destination
             });
             _this.widget.scene.animations.add(flight);
+            _this.speechSynthesis.speak('Ich habe dich gefunden.');
         }
 
         navigator.geolocation.getCurrentPosition(fly);
@@ -299,12 +305,16 @@ CesiumWorld.prototype.flyTo = function(_location) {
         }
         else
         {
+            _this.speechSynthesis.answer('navigateTo', true, _location);
+            _this.emit('flyToFlag');
+
             _this.speechSynthesis.answer('navigateTo', {
                 'state' : true,
                 'replace' : _location
             });
             
             _this.lastLocation = _location;
+
         }
 
     }, 1000);
