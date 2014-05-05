@@ -1,8 +1,5 @@
 /* globals Cesium, CesiumWorld, window, $, navigator */
 
-var events = require('events');
-var util   = require('util');
-
 /**
 * Export for require statemant
 */
@@ -52,7 +49,7 @@ function CesiumWorld(_speechRecognition, _speechSynthesis) {
          }));
 
         var _this = this;
-
+      
         this.widget = new Cesium.CesiumWidget('cesiumContainer', {
             'imageryProvider': false,
             skyBox : new Cesium.SkyBox({
@@ -74,7 +71,10 @@ function CesiumWorld(_speechRecognition, _speechSynthesis) {
         this.ellipsoid = this.widget.centralBody.ellipsoid;
         this.centralBody = this.widget.centralBody;
         this.centralBody.depthTestAgainstTerrain = true;
-
+      
+    
+        this.widget.scene.camera.rotateRight (1.7453292519943295);
+          
         this.cesiumTerrainProviderMeshes = new Cesium.CesiumTerrainProvider({
             url : 'http://cesiumjs.org/stk-terrain/tilesets/world/tiles',
             credit : 'Terrain data courtesy Analytical Graphics, Inc.'
@@ -156,7 +156,6 @@ function CesiumWorld(_speechRecognition, _speechSynthesis) {
         this.init();
 }
 
-util.inherits(CesiumWorld, events.EventEmitter);
 
 CesiumWorld.prototype.setTerrain = function(_state)
 {
@@ -306,7 +305,6 @@ CesiumWorld.prototype.flyTo = function(_location) {
         else
         {
             _this.speechSynthesis.answer('navigateTo', true, _location);
-            _this.emit('flyToFlag');
 
             _this.speechSynthesis.answer('navigateTo', {
                 'state' : true,

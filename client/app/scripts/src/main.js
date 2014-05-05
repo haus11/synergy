@@ -40,11 +40,6 @@ speechRecognition.on('standardMode', function() {
 	speechSynthesis.answer('standardMode', {'state': true});
 });
 
-cesiumWorld.on('flyToFlag', function() {
-        console.log('Aufruf');
-	cameraControls.flyToFlag = true;
-});
-
 // Ui stuff
 $(document).ready(function() {
 	ui.closeWelcomeBox();

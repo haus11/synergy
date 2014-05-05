@@ -229,28 +229,17 @@ THREE.LeapCameraControls = function(camera, ellipsoid) {
   // methods
   this.rotateCamera = function(frame) {
     if (_this.rotateEnabled && _this.applyGesture(frame, 'rotate')) {
-          
-//        var lastY = _this.camera.position.y;
-//        var lastX = _this.camera.position.x;
+
         
-        
+
         // rotate around axis in xy-plane (in target coordinate system) which is orthogonal to camera vector
         
-        if(_this.flyToFlag == true) {  
-            var y = _this.position(frame, 'rotate')[0];
-        }
-        else {
-            var y = _this.position(frame, 'rotate')[1];
-        }
+        // if fly to modus was used, change x and y and fix the inverted new x
+      
+        var y = _this.position(frame, 'rotate')[0];
+       
         if (!_rotateYLast) _rotateYLast = y;
         var yDelta = y - _rotateYLast;
-
-        // y auf links rechts vertauschen
-//        if (flyToFlag == true) {
-//            var y = _this.position(frame, 'rotate')[1];
-//            if (!_rotateYLast) _rotateYLast = X;
-//            var yDelta = y - _rotateXLast;
-//        }
         
         var t = new THREE.Vector3().subVectors(_this.camera.position, _this.target); // translate
         angleDelta = _this.rotateTransform(yDelta);
@@ -262,34 +251,28 @@ THREE.LeapCameraControls = function(camera, ellipsoid) {
           _this.camera.rotate(n, -angleDelta);   
         };
 
+        var x = -_this.position(frame, 'rotate')[1];
         // rotate around y-axis translated by target vector
-        if(_this.flyToFlag == true) {  
-            var x = _this.position(frame, 'rotate')[1];
-        }
-        else {
-          var x = _this.position(frame, 'rotate')[0];
-        }
-      
         if (!_rotateXLast) _rotateXLast = x;
         var xDelta = x - _rotateXLast;
-
+        
         angleDelta = _this.rotateTransform(xDelta);
         var n = new THREE.Vector3(0, 1, 0).normalize();
 
         // rotation speed adjusting
         var cameraHeight = _this.ellipsoid.cartesianToCartographic(_this.camera.position).height;
 //        console.log (_this.camera.position);
-        
+          console.log (cameraHeight);
         if (cameraHeight < 300) {
             _this.rotateSpeed = 0.00002;
         }
         else if (cameraHeight < 2000 && cameraHeight > 300) {
             _this.rotateSpeed = 0.0001;
         }
-        else if (cameraHeight < 10000 && cameraHeight > 2000) {
+        else if (cameraHeight < 12000 && cameraHeight > 2000) {
             _this.rotateSpeed = 0.003;
         }
-        else if (cameraHeight < 80000 && cameraHeight > 10000) {
+        else if (cameraHeight < 80000 && cameraHeight > 12000) {
             _this.rotateSpeed = 0.008;
         }
         else if (cameraHeight < 300000 && cameraHeight > 80000) {
