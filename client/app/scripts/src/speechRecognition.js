@@ -14,6 +14,7 @@ module.exports = SpeechRecognition;
  * Constructor
  */
 function SpeechRecognition(_speechList) {
+    'use strict';
 
     this.browserRecognition = null;
     this.isRecognizing = false;
@@ -29,6 +30,7 @@ util.inherits(SpeechRecognition, events.EventEmitter);
 
 
 SpeechRecognition.prototype.init = function() {
+    'use strict';
     
     if (!('webkitSpeechRecognition' in window)) {
         console.log('not available');
@@ -51,18 +53,22 @@ SpeechRecognition.prototype.init = function() {
 };
 
 SpeechRecognition.prototype.start = function() {
+    'use strict';
     this.browserRecognition.start();
 };
 
 SpeechRecognition.prototype.stop = function() {
+    'use strict';
     this.browserRecognition.stop();
 };
 
 SpeechRecognition.prototype.onStart = function() {
+    'use strict';
     this.isRecognizing = true;
 };
 
 SpeechRecognition.prototype.onResult = function(event) {
+    'use strict';
     
     var interimTranscript = '';
     var finalMatch = false;
@@ -111,12 +117,13 @@ SpeechRecognition.prototype.onResult = function(event) {
     }
 };
 
-SpeechRecognition.prototype.trimSpaces = function(_string)
-{
+SpeechRecognition.prototype.trimSpaces = function(_string) {
+    'use strict';
     return _string.replace(/^\s\s*/, '').replace(/\s\s*$/, '');
 };
 
 SpeechRecognition.prototype.onEnd = function() {
+    'use strict';
     this.isRecognizing = false;
     
     if(!this.speechError)
@@ -128,6 +135,7 @@ SpeechRecognition.prototype.onEnd = function() {
 };
 
 SpeechRecognition.prototype.onError = function(event) {
+    'use strict';
     
     if (event.error === 'no-speech') {
         console.log('Error: no speech');

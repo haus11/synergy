@@ -14,6 +14,7 @@ module.exports = SpeechSynthesis;
  * Constructor
  */
 function SpeechSynthesis(_speechList) {
+    'use strict';
 
     this.message = null;
     this.voices  = [];
@@ -28,6 +29,7 @@ util.inherits(SpeechSynthesis, events.EventEmitter);
 
 
 SpeechSynthesis.prototype.init = function() {
+    'use strict';
     
     if (!('speechSynthesis' in window)) {
         console.log('not available');
@@ -50,6 +52,8 @@ SpeechSynthesis.prototype.init = function() {
 };
 
 SpeechSynthesis.prototype.strSplitOnLength = function(str, maxWidth) {
+    'use strict';
+
     var resultArr = [];
     var parts = str.split(/([\s\n\r]+)/);
     var count = parts.length;
@@ -67,8 +71,8 @@ SpeechSynthesis.prototype.strSplitOnLength = function(str, maxWidth) {
 };
 
 
-SpeechSynthesis.prototype.onEnd = function()
-{
+SpeechSynthesis.prototype.onEnd = function() {
+    'use strict';
     console.log(this);
     
     if((this.overlengthArray.length) === this.overlengthCount)
@@ -89,6 +93,7 @@ SpeechSynthesis.prototype.onEnd = function()
 };
 
 SpeechSynthesis.prototype.speak = function(_text, _options) {
+    'use strict';
     
     window.speechSynthesis.cancel();
     
@@ -148,6 +153,7 @@ SpeechSynthesis.prototype.speak = function(_text, _options) {
 };
 
 SpeechSynthesis.prototype.answer = function(_emit, _options) {
+    'use strict';
     
     for (var j = 0; j < this.speechList.length; ++j)
     {

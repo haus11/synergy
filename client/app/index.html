@@ -11,22 +11,16 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
 
         <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
-        <link rel="stylesheet" href="styles/css/reset.css">
         <link rel="stylesheet" href="bower_components/normalize-css/normalize.css">
         <link rel="stylesheet" href="styles/css/main.css">
-        <link rel="stylesheet" href="scripts/src/cesium/Build/Cesium/Widgets/CesiumWidget/CesiumWidget.css">
+        <link rel='stylesheet' href='styles/css/visualizer.css'>
+        <link rel="stylesheet" href="styles/css/CesiumWidget.css">
 
-        <!-- visualizer stuff -->
-        <link href='leap/visualizer/css/visualizer.css' rel='stylesheet' type='text/css'>
-        <!-- visualizer stuff end -->
     </head>
     <body>
         <!--[if lt IE 7]>
             <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
         <![endif]-->
-
-        <!-- Add your site or application content here -->
-        <!--<div id="webglContainer" class="webgl-container"></div>-->
 
         <div id="cesiumContainer" class="fullSize"></div>
         <nav class="l-navigation">
@@ -58,7 +52,7 @@
             </div>
         </div>
 
-        <!-- visualizer stuff -->
+        <!-- hand visualizer start -->
             <div id="app" class="show-hands" >
                 <button id="showHands">Show Hands</button>
                 <button id="hideHands">hide Hands</button>
@@ -79,14 +73,11 @@
                   </div>
                 </div>
             </div>
-        <!-- visualizer stuff end -->
+        <!-- hand visualizer end -->
+
         <script type="text/javascript" src="bower_components/jquery/jquery.min.js"></script>
-        <script type="text/javascript" src="bower_components/threejs/build/three.js"></script>
-        <script type="text/javascript" src="scripts/src/cesium/Build/Cesium/Cesium.js"></script>
-        <script type="text/javascript" src="bower_components/socket.io-client/dist/socket.io.js"></script>
+        <script type="text/javascript" src="scripts/src/cesium/Cesium.js"></script>
         <script type="text/javascript" src="bower_components/leapjs/leap.js"></script>
-        <script type="text/javascript" src="leap/gesture/LeapCameraControls.js"></script>
-        <script type="text/javascript" src="bower_components/Vague.js/Vague.js"></script>
         <script type="text/javascript" src="scripts/dist/build.js"></script>
 
         <!-- Google Analytics: change UA-XXXXX-X to be your site's ID. -->
