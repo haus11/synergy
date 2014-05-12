@@ -110,17 +110,20 @@ body {
   font-family: sans-serif;
   position: absolute;
 }
-body {
+body,
+html {
   padding: 0;
   margin: 0;
   overflow: hidden;
+  position: relative;
+  height: 100%;
 }
 #app {
   position: relative;
   top: 0;
   left: 0;
   width: 100%;
-  min-height: 1920px;
+  min-height: 1860px;
   pointer-events: none;
 }
 /*
@@ -135,6 +138,7 @@ body {
 .p-welcomebox {
   width: 510px;
   padding: 15px;
+  height: 250px;
   background-color: rgba(92, 40, 73, 0.85);
   -webkit-border-radius: 1px;
   -moz-border-radius: 1px;
@@ -292,6 +296,10 @@ body {
 }
 .l-welcome-btn {
   text-align: center;
+  position: absolute;
+  bottom: 15px;
+  left: 0;
+  width: 100%;
 }
 .l-btn {
   margin-right: 10px;
@@ -387,4 +395,72 @@ body {
   -webkit-border-radius: 2px;
   -moz-border-radius: 2px;
   border-radius: 2px;
+}
+/**
+ * Gesture introduction tutorial
+**/
+.gesture-intro {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  -webkit-perspective: 1000;
+  display: none;
+}
+.gesture-intro .intro-element {
+  background-color: white;
+  opacity: 0.2;
+  width: 100%;
+  height: 100%;
+  -webkit-transform-style: preserve-3d;
+  display: none;
+}
+.gesture-intro #intro-pan {
+  background-color: green;
+}
+.gesture-intro #intro-zoom {
+  -webkit-animation: Zoom 10s infinite;
+  background-color: blue;
+}
+.gesture-intro #intro-rotate {
+  background-color: yellow;
+}
+.gesture-intro #intro-airplane {
+  background-color: orange;
+}
+#slide-tutorial {
+  display: none;
+}
+#slide-tutorial .welcomebox-close {
+  display: none;
+}
+@-webkit-keyframes Zoom {
+  0% {
+    -webkit-transform: translateZ(-2000px);
+  }
+  12.5% {
+    -webkit-transform: translateZ(-1000px);
+  }
+  25% {
+    -webkit-transform: translateZ(-1000px);
+  }
+  37.5% {
+    -webkit-transform: translateZ(-50px);
+  }
+  50% {
+    -webkit-transform: translateZ(-50px);
+  }
+  62.5% {
+    -webkit-transform: translateZ(-1000px);
+  }
+  75% {
+    -webkit-transform: translateZ(-1000px);
+  }
+  87.5% {
+    -webkit-transform: translateZ(-2000px);
+  }
+  100% {
+    -webkit-transform: translateZ(-2000px);
+  }
 }

@@ -155,6 +155,10 @@ function CesiumWorld(_speechRecognition, _speechSynthesis) {
         _this.readAbstractFromWikipedia();
     });
 
+    _this.speechRecognition.on('thanks', function(){
+        _this.speechSynthesis.answer('thanks', {'state': true});
+    });
+
     _this.init();
 }
 
