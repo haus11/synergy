@@ -155,6 +155,10 @@ function CesiumWorld(_speechRecognition, _speechSynthesis) {
         _this.readAbstractFromWikipedia();
     });
 
+    _this.speechRecognition.on('thanks', function(){
+        _this.speechSynthesis.answer('thanks', {'state': true});
+    });
+
     _this.init();
 }
 
@@ -224,8 +228,14 @@ CesiumWorld.prototype.move = function(_direction, _factor) {
 
 CesiumWorld.prototype.init = function() {
     'use strict';
+    var _this = this;
 
-    this.widget.resize();
+    _this.widget.resize();
+
+    // Setup a listener on the browser window resize event
+    window.onresize = function() { 
+      _this.widget.resize();
+    };
 };
 
 CesiumWorld.prototype.flyToMyLocation = function() {

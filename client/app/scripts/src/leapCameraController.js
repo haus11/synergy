@@ -18,7 +18,7 @@ function LeapCameraController(camera, ellipsoid) {
   this.step         = (camera.position.z === 0 ? Math.pow(10, (Math.log(camera.frustum.near) + Math.log(camera.frustum.far))/Math.log(10))/10.0 : camera.position.z);
   this.fingerFactor = 2;
   this.startZ       = this.camera.position.z;
-  this.controlMode  = 'standard';
+  this.controlMode  = 'flight'; // 'standard' or 'flight'
 
 
   // `...Hands`       : integer or range given as an array of length 2

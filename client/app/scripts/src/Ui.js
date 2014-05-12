@@ -1,4 +1,4 @@
-/* globals Ui, $, document */
+/* globals Ui, $ */
 
 /**
 * Export for require statemant
@@ -23,9 +23,9 @@ function Ui(cesiumWorld) {
 Ui.prototype.closeWelcomeBox = function() {
 	'use strict';
 
-	$('#welcomebox-close').click(function()
+	$('.welcomebox-close').click(function()
 	{
-		$('#welcomebox').fadeOut(500);
+		$('#welcomebox, #gesture-intro').fadeOut(500);
 	});
 };
 
@@ -61,11 +61,8 @@ Ui.prototype.changeRelief = function() {
 
 Ui.prototype.init = function() {
 	'use strict';
-	
-	var _this = this;
-	$(document).ready(function() {
-		_this.closeWelcomeBox();
-		_this.toggleMenu();
-		_this.changeRelief();
-	});
+
+	this.closeWelcomeBox();
+	this.toggleMenu();
+	this.changeRelief();
 };

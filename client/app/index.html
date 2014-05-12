@@ -42,13 +42,27 @@
             </section>
         </nav>
         <div id="welcomebox" class="p-welcomebox l-welcomebox">
-            <h2 class="p-title l-title">SYNERGY</h2>
-            <p class="l-paragraph p-paragraph">
-                This is an introduction text. It has a fixed size, and a custom line height, so you can experiment with it. Lore ipsum dolor sit amet, consectetur adipiscing elit. Cras dapibus vulputate diam eu pretium.
-            </p>
-            <div class="l-welcome-btn">
-                <button class="l-btn p-btn-succ">Tutorial</button>
-                <button class="l-btn p-btn-erro" id="welcomebox-close">Close</button>
+            <div id="slide-welcome">
+                <h2 class="p-title l-title">SYNERGY</h2>
+                <p class="l-paragraph p-paragraph">
+                    This is an introduction text. It has a fixed size, and a custom line height, so you can experiment with it. Lore ipsum dolor sit amet, consectetur adipiscing elit. Cras dapibus vulputate diam eu pretium.
+                </p>
+                <div class="l-welcome-btn">
+                    <button class="l-btn p-btn-succ" id="btn-start-tutorial">Tutorial</button>
+                    <button class="l-btn p-btn-erro welcomebox-close">Close</button>
+                </div>
+            </div>
+            <div id="slide-tutorial">
+                <div id="slide-info">
+                    <h2 class="p-title l-title" id="slide-title">TITLE</h2>
+                    <p class="l-paragraph p-paragraph" id="slide-description">
+                        The description of the current tutorial slide.
+                    </p>
+                </div>
+                <div class="l-welcome-btn">
+                    <button class="l-btn p-btn-succ" id="intro-next">Weiter</button>
+                    <button class="l-btn p-btn-erro welcomebox-close">Close</button>
+                </div>
             </div>
         </div>
         <div class="tutorial">
@@ -78,6 +92,25 @@
                 </div>
             </div>
         <!-- hand visualizer end -->
+
+
+
+        <!-- Gesture intro -->
+        <div class="gesture-intro" id="gesture-intro">
+            <div class="intro-element" id="intro-start" data-title="START" data-description="This is the start of the tutorial.">
+            </div>
+            <div class="intro-element" id="intro-pan" data-title="VERSCHIEBEN" data-description="Hier wird verschieben erklärt.">
+            </div>
+            <div class="intro-element" id="intro-zoom" data-title="ZOOMEN" data-description="Hier wird zoomen erklärt.">
+            </div>
+            <div class="intro-element" id="intro-rotate" data-title="ROTIEREN" data-description="Hier wird rotieren erklärt.">
+            </div>
+            <div class="intro-element" id="intro-airplane" data-title="FLUGZEUG" data-description="Hier wird flugzeug erklärt.">
+            </div>
+            <div class="intro-element" id="intro-end" data-title="ENDE" data-description="This is the end of the tutorial.">
+            </div>
+        </div>
+
 
         <script type="text/javascript" src="bower_components/jquery/jquery.min.js"></script>
         <script type="text/javascript" src="scripts/src/cesium/Cesium.js"></script>
