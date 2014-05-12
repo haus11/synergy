@@ -56,7 +56,8 @@ module.exports = function (grunt) {
                 unused: true,
                 boss: true,
                 eqnull: true,
-                proto: true
+                proto: true,
+                strict: true
             },
             gruntfile: {
                 src: 'gruntfile.js'
