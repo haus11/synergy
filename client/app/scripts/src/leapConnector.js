@@ -21,9 +21,6 @@ function LeapConnector() {
   // Create a new controller
   this.controller = new this.Leap.Controller({enableGestures: true});
 
-  // Setup the listeners
-  this.setupGestureRecognizer();
-
   // Setup the connect event listener
   this.controller.on('connect', function() {
     console.log("Successfully connected.");
@@ -43,35 +40,6 @@ function LeapConnector() {
 util.inherits(LeapConnector, events.EventEmitter);
 
 
-/**
-* Implements predefined and custom gestures
-*/
-LeapConnector.prototype.setupGestureRecognizer = function() {
-  'use strict';
-
-	// We need leapConnector as an alias
-	var leapConnector = this;
-
-	leapConnector.controller.on('gesture', function (gesture){
-		if(gesture.type === 'swipe'){
-			switch(gesture.state) {
-				case 'start':
-					leapConnector.emit('swipeStart');
-					break;
-
-				case 'update':
-					leapConnector.emit('swipeUpdate');
-					break;
-					
-				case 'stop': 
-					leapConnector.emit('swipeEnd');
-					break;
-			}
-		}
-	});
-};
-
-
 LeapConnector.prototype.update = function() {
   'use strict';
 
@@ -80,7 +48,9 @@ LeapConnector.prototype.update = function() {
 };
 
 
-
+/**
+* Functions for the visualization of the leap data
+*/
 LeapConnector.prototype.moveFinger = function(Finger, posX, posY, posZ, dirX, dirY, dirZ) {
   'use strict';
   Finger.style.webkitTransform = Finger.style.mozTransform = 
@@ -92,8 +62,6 @@ LeapConnector.prototype.moveSphere = function(Sphere, posX, posY, posZ, rotX) {
   Sphere.style.webkitTransform = Sphere.style.mozTransform = 
   Sphere.style.transform = "translateX("+posX+"px) translateY("+posY+"px) translateZ("+posZ+"px) rotateX("+rotX+"deg) rotateY(0deg) rotateZ(0deg)";
 };
-
-
 
 LeapConnector.prototype.visualize = function () {
   'use strict';

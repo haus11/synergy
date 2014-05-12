@@ -1,6 +1,5 @@
 /* globals requestAnimationFrame */
 
-// Require all needed modules here
 var LeapConnector        = require('./leapConnector.js');
 var LeapCameraController = require('./leapCameraController.js');
 var CesiumWorld          = require('./cesiumWorld.js');
