@@ -446,7 +446,7 @@ html {
   background-size: 100% 100%;
   margin-left: auto;
   margin-right: auto;
-  -webkit-animation: Airplane 8#s infinite;
+  -webkit-animation: Airplane 8s infinite;
 }
 /**
  * Gesture introduction tutorial
