@@ -1,17 +1,129 @@
-.tutorial {
-	width: 60%;
-	margin-left: 20%;
-	margin-right: 20%;
-	position: absolute;
-	height:500px;
-	background-color: red;
+.m_Gesture(@_Image: '') {
+    background-image: url('../../images/tutorial/gestures/@{_Image}');
+    width: 100%;
+    height: 100%;
+    background-size: 100% 100%;
+    margin-left: auto;
+    margin-right: auto;
 }
 
-.tutorial-gesture-right {
-	background-image: url('../../images/tutorial/gestures/swipe_right.svg');
-	width: 80%;
-	height: 100%;
-	background-size: 100% 100%;
-	margin-left: auto;
-	margin-right: auto;
+.tutorial-gest-rotright {
+	.m_Gesture('swipe_right.svg');
+    -webkit-animation: Rotate 5s infinite;
+}
+.tutorial-gest-zoom {
+    .m_Gesture('zoom.svg');
+    -webkit-animation: Zoom 5s infinite;
+}
+.tutorial-gest-pan{
+    .m_Gesture('hands.svg');
+    .m_TranslateZ(-200px);
+    -webkit-animation: Pan 7s infinite;
+}
+
+/**
+ * Gesture introduction tutorial
+ * Sweetly done, but next time a little more shoot to kill plz, http://csswizardry.com/2012/07/shoot-to-kill-css-selector-intent/
+**/
+.gesture-intro {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    -webkit-perspective: 1000;
+    display: none;
+    z-index: 0;
+    background-color: fade(@c_Success, 40%);
+    pointer-events:none;
+    .m_Transition(all, 0.5s, ease);
+
+    .intro-element {
+        opacity: 0.8;
+        width: 80%;
+        height: 80%;
+        margin-left: 13%;
+        margin-right: 7%;
+        margin-top: 5%;
+        margin-bottom: 15%;
+        -webkit-transform-style: preserve-3d;
+        display: none;
+    }
+
+    #intro-pan {
+
+    }
+    #intro-zoom {
+    }
+    #intro-rotate {
+    }
+    #intro-airplane {
+    }
+}
+
+// Hide the tutorial slide in the welcome box
+#slide-tutorial {
+    display: none;
+
+    .welcomebox-close {
+        display: none;
+    }
+}
+
+
+/*
+ * Animations
+*/
+@-webkit-keyframes Pan
+{
+    0%   {
+        .m_Translate2D(0, 0);
+    }
+    12.5%   {
+        .m_Translate2D(-25%, 0);
+    }
+    25% {
+        .m_Translate2D(25%, 0);
+    }
+    50% {
+        .m_Translate2D(0%, 0%);
+    }
+    62.5% {
+        .m_Translate2D(0%, 25%);
+    }
+    75% {
+        .m_Translate2D(0%, -25%);
+    }
+    100% {
+        .m_Translate2D(0%, 0%);
+    }
+}
+
+@-webkit-keyframes Zoom
+{
+    0%   {
+        .m_TranslateZ(500px);
+    }
+    50%   {
+        .m_TranslateZ(-1000px);
+    }
+    100% {
+        .m_TranslateZ(500px);
+    }
+}
+
+@-webkit-keyframes Rotate
+{
+    0%   {
+        .m_Rotate(-25deg);
+        .m_TransformOrigin(50%, 90%);
+    }
+    50%   {
+        .m_Rotate(25deg);
+        .m_TransformOrigin(50%, 90%);
+    }
+    100%  {
+        .m_Rotate(-25deg);
+        .m_TransformOrigin(50%, 90%);
+    }
 }

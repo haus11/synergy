@@ -173,6 +173,7 @@ body, html {
 .l-welcomebox {
     position: relative;
     top: 50px;
+    z-index: 2;
 }
 
 .l-title {
@@ -202,6 +203,7 @@ body, html {
     position: absolute;
     right: 0;
     width: 300px;
+    z-index: 2;
 }
 .l-layer-chooser {
 }
@@ -273,6 +275,7 @@ body, html {
     }
     position: absolute;
     right: 0;
+    z-index: 2;
 }
 
 .menu-stripe {
@@ -288,79 +291,3 @@ body, html {
 
 @import "less_includes/tutorial.less";
 
-/**
- * Gesture introduction tutorial
-**/
-.gesture-intro {
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    top: 0;
-    left: 0;
-    -webkit-perspective: 1000;
-    display: none;
-
-    .intro-element {
-        background-color: white;
-        opacity: 0.2;
-        width: 100%;
-        height: 100%;
-        -webkit-transform-style: preserve-3d;
-        display: none;
-    }
-
-    #intro-pan {
-        background-color: green;
-    }
-    #intro-zoom {
-        -webkit-animation: Zoom 10s infinite;
-        background-color: blue;
-    }
-    #intro-rotate {
-        background-color: yellow;
-    }
-    #intro-airplane {
-        background-color: orange;
-    }
-}
-
-// Hide the tutorial slide in the welcome box
-#slide-tutorial {
-    display: none;
-
-    .welcomebox-close {
-        display: none;
-    }
-}
-
-@-webkit-keyframes Zoom
-{
-    0%   {
-        -webkit-transform: translateZ(-2000px);
-    }
-    12.5%  {
-        -webkit-transform: translateZ(-1000px);
-    }
-    25%  {
-        -webkit-transform: translateZ(-1000px);
-    }
-    37.5% {
-        -webkit-transform: translateZ(-50px);
-    }
-    50%   {
-        -webkit-transform: translateZ(-50px);
-    }
-    62.5%  {
-        -webkit-transform: translateZ(-1000px);
-    }
-    75%  {
-        -webkit-transform: translateZ(-1000px);
-    }
-    87.5% {
-        -webkit-transform: translateZ(-2000px);
-    }
-    100% {
-        -webkit-transform: translateZ(-2000px);
-    }
-}
->>>>>>> ba50244cf74fe5c411c2905b11c33177a5da4bfa

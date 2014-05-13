@@ -14,7 +14,7 @@ module.exports = function (grunt) {
         browserify: {
             js: {
                 files: {
-                  './app/scripts/dist/build.js': ['./app/scripts/src/main.js']  
+                  './app/scripts/dist/build.js': ['./app/scripts/src/main.js']
                 },
                 options: {
                     bundleOptions: {
@@ -84,7 +84,8 @@ module.exports = function (grunt) {
                 }
             },
             styles: {
-                files: ['app/styles/*.less'],
+                files: ['app/styles/*.less',
+                        'app/styles/less_includes/*.less'],
                 tasks: ['less']
             }
         }
@@ -93,9 +94,9 @@ module.exports = function (grunt) {
 
     // Command line tasks
     grunt.registerTask('serve', [
-        'jshint:scripts', 
+        'jshint:scripts',
         'browserify',
-        'less', 
+        'less',
         'browserSync',
         'watch']);
 };

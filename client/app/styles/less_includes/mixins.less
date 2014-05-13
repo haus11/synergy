@@ -14,3 +14,31 @@
 	-webkit-transition: @_Property @_Time @_Type; /* For Safari 3.1 to 6.0 */
 	transition: @_Property @_Time @_Type;
 }
+
+.m_Rotate(@_Angle: 0deg) {
+	transform:rotate(@_Angle);
+	-ms-transform:rotate(@_Angle); /* IE 9 */
+	-webkit-transform:rotate(@_Angle); /* Opera, Chrome, and Safari */
+}
+
+.m_TransformOrigin(@_X, @_Y) {
+	transform-origin:@_X @_Y;
+	-ms-transform-origin:@_X @_Y; /* IE 9 */
+	-webkit-transform-origin:@_X @_Y; /* Chrome, Safari, Opera */
+}
+
+.m_Scale(@_X, @_Y) {
+	transform:scale(@_X, @_Y);
+	-ms-transform:scale(@_X, @_Y); /* IE 9 */
+	-webkit-transform:scale(@_X, @_Y); /* Opera, Chrome, and Safari */
+}
+
+.m_TranslateZ(@_Z) {
+	-webkit-transform: translateZ(@_Z); /* Chrome, Safari, Opera */
+	transform: translateZ(@_Z);
+}
+.m_Translate2D(@_X, @_Y) {
+	transform:translate(@_X, @_Y);
+	-ms-transform:translate(@_X, @_Y); /* IE 9 */
+	-webkit-transform:translate(@_X, @_Y); /* Opera, Chrome, and Safari */
+}
