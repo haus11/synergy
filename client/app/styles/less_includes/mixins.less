@@ -42,3 +42,31 @@
 	-ms-transform:translate(@_X, @_Y); /* IE 9 */
 	-webkit-transform:translate(@_X, @_Y); /* Opera, Chrome, and Safari */
 }
+
+.m_Translate3D(@_X, @_Y, @_Z) {
+	transform:translate3d(@_X, @_Y, @_Z);
+	-ms-transform:translate3d(@_X, @_Y, @_Z); /* IE 9 */
+	-webkit-transform:translate3d(@_X, @_Y, @_Z); /* Opera, Chrome, and Safari */
+}
+
+.m_Rotate3D(@_X, @_Y, @_Z, @_Angle) {
+	transform:rotate3d(@_X, @_Y, @_Z, @_Angle);
+	-ms-transform:rotate3d(@_X, @_Y, @_Z, @_Angle); /* IE 9 */
+	-webkit-transform:rotate3d(@_X, @_Y, @_Z, @_Angle); /* Opera, Chrome, and Safari */
+}
+
+.m_RotateX(@_Angle) {
+	transform:rotateX(@_Angle);
+	-ms-transform:rotateX(@_Angle); /* IE 9 */
+	-webkit-transform:rotateX(@_Angle); /* Opera, Chrome, and Safari */
+}
+.m_RotateY(@_Angle) {
+	transform:rotateY(@_Angle);
+	-ms-transform:rotateY(@_Angle); /* IE 9 */
+	-webkit-transform:rotateY(@_Angle); /* Opera, Chrome, and Safari */
+}
+.m_RotateZ(@_Angle) {
+	transform:rotateZ(@_Angle);
+	-ms-transform:rotateZ(@_Angle); /* IE 9 */
+	-webkit-transform:rotateZ(@_Angle); /* Opera, Chrome, and Safari */
+}

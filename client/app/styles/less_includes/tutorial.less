@@ -20,6 +20,10 @@
     .m_TranslateZ(-200px);
     -webkit-animation: Pan 7s infinite;
 }
+.tutorial-gest-airplane {
+    .m_Gesture('airplane.svg');
+    -webkit-animation: Airplane 8#s infinite;
+}
 
 /**
  * Gesture introduction tutorial
@@ -74,6 +78,38 @@
 /*
  * Animations
 */
+@-webkit-keyframes Airplane
+{
+    0%   {
+        -webkit-transform: rotateX(45deg) rotateZ(20deg);
+    }
+    12.5% {
+        -webkit-transform: rotateX(90deg) rotateZ(20deg);
+    }
+    25% {
+        -webkit-transform: rotateX(70deg) rotateZ(20deg);
+    }
+    37.5% {
+        -webkit-transform: rotateX(70deg) rotateY(25deg) rotateZ(20deg);
+    }
+    50% {
+        -webkit-transform: rotateX(70deg) rotateY(-25deg) rotateZ(20deg);
+    }
+    62.5% {
+        -webkit-transform: rotateX(70deg) rotateY(0deg) rotateZ(20deg);
+    }
+    75% {
+        -webkit-transform: rotateX(70deg) rotateY(0deg) translateZ(-100px) rotateZ(20deg);
+    }
+    87.5% {
+        -webkit-transform: rotateX(70deg) rotateY(0deg) translateZ(100px) rotateZ(20deg);
+    }
+    100% {
+        -webkit-transform: rotateX(70deg) rotateY(0deg) translateZ(0px) rotateZ(20deg);
+    }
+
+}
+
 @-webkit-keyframes Pan
 {
     0%   {
