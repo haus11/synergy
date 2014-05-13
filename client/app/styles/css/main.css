@@ -439,6 +439,15 @@ html {
   transform: translateZ(-200px);
   -webkit-animation: Pan 7s infinite;
 }
+.tutorial-gest-airplane {
+  background-image: url('../../images/tutorial/gestures/airplane.svg');
+  width: 100%;
+  height: 100%;
+  background-size: 100% 100%;
+  margin-left: auto;
+  margin-right: auto;
+  -webkit-animation: Airplane 8#s infinite;
+}
 /**
  * Gesture introduction tutorial
  * Sweetly done, but next time a little more shoot to kill plz, http://csswizardry.com/2012/07/shoot-to-kill-css-selector-intent/
@@ -478,6 +487,35 @@ html {
 /*
  * Animations
 */
+@-webkit-keyframes Airplane {
+  0% {
+    -webkit-transform: rotateX(45deg) rotateZ(20deg);
+  }
+  12.5% {
+    -webkit-transform: rotateX(90deg) rotateZ(20deg);
+  }
+  25% {
+    -webkit-transform: rotateX(70deg) rotateZ(20deg);
+  }
+  37.5% {
+    -webkit-transform: rotateX(70deg) rotateY(25deg) rotateZ(20deg);
+  }
+  50% {
+    -webkit-transform: rotateX(70deg) rotateY(-25deg) rotateZ(20deg);
+  }
+  62.5% {
+    -webkit-transform: rotateX(70deg) rotateY(0deg) rotateZ(20deg);
+  }
+  75% {
+    -webkit-transform: rotateX(70deg) rotateY(0deg) translateZ(-100px) rotateZ(20deg);
+  }
+  87.5% {
+    -webkit-transform: rotateX(70deg) rotateY(0deg) translateZ(100px) rotateZ(20deg);
+  }
+  100% {
+    -webkit-transform: rotateX(70deg) rotateY(0deg) translateZ(0px) rotateZ(20deg);
+  }
+}
 @-webkit-keyframes Pan {
   0% {
     transform: translate(0, 0);
