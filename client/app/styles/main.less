@@ -65,9 +65,22 @@ body, html {
 .p-welcomebox {
     width: 510px;
     padding: 15px;
-    height: 250px;
+    min-height: 250px;
     .p-ui-element();
+
+    a {
+        text-decoration: none;
+        color: @c_SunriseOrange;
+
+        &:hover {
+            color: darken(@c_SunriseOrange, 15%);
+        }
+    }
 }
+#slide-welcome {
+    height: 270px;
+}
+
 .p-title {
     .t_H1();
     text-align: center;
