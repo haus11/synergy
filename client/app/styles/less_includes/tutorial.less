@@ -24,6 +24,10 @@
     .m_Gesture('airplane.svg');
     -webkit-animation: Airplane 8s infinite;
 }
+.tutorial-gest-stop {
+    .m_Gesture('stop.svg');
+    -webkit-animation: Stop 3s infinite;
+}
 
 /**
  * Gesture introduction tutorial
@@ -132,6 +136,19 @@
     }
     100% {
         .m_Translate2D(0%, 0%);
+    }
+}
+
+@-webkit-keyframes Stop
+{
+    0%   {
+        .m_TranslateZ(0px);
+    }
+    50% {
+        .m_TranslateZ(100px);
+    }
+    100% {
+        .m_TranslateZ(0px);
     }
 }
 

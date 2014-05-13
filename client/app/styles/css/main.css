@@ -448,6 +448,15 @@ html {
   margin-right: auto;
   -webkit-animation: Airplane 8s infinite;
 }
+.tutorial-gest-stop {
+  background-image: url('../../images/tutorial/gestures/stop.svg');
+  width: 100%;
+  height: 100%;
+  background-size: 100% 100%;
+  margin-left: auto;
+  margin-right: auto;
+  -webkit-animation: Stop 3s infinite;
+}
 /**
  * Gesture introduction tutorial
  * Sweetly done, but next time a little more shoot to kill plz, http://csswizardry.com/2012/07/shoot-to-kill-css-selector-intent/
@@ -565,6 +574,23 @@ html {
     /* IE 9 */
     -webkit-transform: translate(0%, 0%);
     /* Opera, Chrome, and Safari */
+  }
+}
+@-webkit-keyframes Stop {
+  0% {
+    -webkit-transform: translateZ(0px);
+    /* Chrome, Safari, Opera */
+    transform: translateZ(0px);
+  }
+  50% {
+    -webkit-transform: translateZ(100px);
+    /* Chrome, Safari, Opera */
+    transform: translateZ(100px);
+  }
+  100% {
+    -webkit-transform: translateZ(0px);
+    /* Chrome, Safari, Opera */
+    transform: translateZ(0px);
   }
 }
 @-webkit-keyframes Zoom {
