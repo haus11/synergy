@@ -23,6 +23,7 @@ After that make sure to install all bower components in the client folder by run
 
 	bower install
 
+Synergy has only been tested against the latest Chrome(v34) version. We recommend using it during development.
 
 ### Develop the server side
 To start the the node.js server go into the root directory and run 
@@ -37,7 +38,6 @@ In order to develop the client just open an additional command line and run
 	grunt serve
 
 in the client directory.
-
 
 ## Contributors
 - [David König](https://github.com/DavidKoenig)
