@@ -31,9 +31,12 @@ util.inherits(SpeechSynthesis, events.EventEmitter);
 SpeechSynthesis.prototype.init = function() {
     'use strict';
     
-    if (!('speechSynthesis' in window)) {
-        console.log('not available');
-    } else {
+    // Checking for speech recognition here because speechSynthesis is a little buggy in firefox
+    if (!('webkitSpeechRecognition' in window)) {
+        console.log('SpeechSynthesis is not available.');
+    } 
+    else 
+    {
 
         this.message = new SpeechSynthesisUtterance();
         this.voices = window.speechSynthesis.getVoices();

@@ -33,7 +33,7 @@ SpeechRecognition.prototype.init = function() {
     'use strict';
     
     if (!('webkitSpeechRecognition' in window)) {
-        console.log('not available');
+        console.log('Speech recognition is not available.');
     } else {
 
         this.browserRecognition = new webkitSpeechRecognition();
